@@ -1170,6 +1170,116 @@ body::before {
 .fab:active { transform: scale(0.93); box-shadow: 0 2px 10px rgba(201,168,76,0.2); }
 
 /* ══════════════════════════════════
+   LANG SELECTOR
+══════════════════════════════════ */
+.lang-selector {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-pill);
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: transparent;
+  color: var(--mist);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.18s;
+  line-height: 1;
+}
+.lang-btn.active { background: var(--gold); color: var(--ink); }
+
+/* ══════════════════════════════════
+   API GUIDE CARD
+══════════════════════════════════ */
+.api-guide {
+  background: rgba(201,168,76,0.05);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+.api-guide-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.api-guide-title { font-size: 13px; font-weight: 600; color: var(--gold2); flex: 1; }
+.api-guide-chevron { color: var(--gold); font-size: 14px; transition: transform 0.2s; }
+.api-guide.open .api-guide-chevron { transform: rotate(180deg); }
+.api-guide-body { display: none; padding: 0 16px 16px; }
+.api-guide.open .api-guide-body { display: block; }
+.api-step {
+  display: flex; gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.api-step:last-child { border-bottom: none; }
+.api-step-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--gold-dim2); border: 1px solid var(--gold);
+  color: var(--gold2); font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.api-step-text { font-size: 12.5px; line-height: 1.65; color: var(--fog); }
+.api-step-text a { color: var(--gold2); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); }
+.api-step-text strong { color: var(--snow); font-weight: 600; }
+.api-step-text code {
+  background: var(--ink3); border: 1px solid var(--border2);
+  border-radius: 4px; padding: 1px 5px;
+  font-family: 'Courier New', monospace; font-size: 11px; color: var(--gold3);
+}
+.api-warn {
+  margin-top: 10px; padding: 9px 12px;
+  background: rgba(224,85,85,0.08); border: 1px solid rgba(224,85,85,0.2);
+  border-radius: var(--r-sm); font-size: 12px; color: #ff9999; line-height: 1.5;
+}
+.api-ok {
+  margin-top: 8px; padding: 9px 12px;
+  background: rgba(76,175,130,0.08); border: 1px solid rgba(76,175,130,0.2);
+  border-radius: var(--r-sm); font-size: 12px; color: #6fd4a2; line-height: 1.5;
+}
+
+/* ── Ask Claude button ── */
+.btn-ask-claude {
+  background: linear-gradient(135deg, #c17a3a, #e8a84a);
+  color: #1a0e00;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 16px rgba(232,168,74,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.btn-ask-claude::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  pointer-events: none;
+}
+.btn-ask-claude:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 6px rgba(232,168,74,0.2);
+}
+.ask-claude-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--mist);
+  margin-top: 7px;
+  letter-spacing: 0.02em;
+}
+
+/* ══════════════════════════════════
    STAGGER ANIMATION
 ══════════════════════════════════ */
 @keyframes fadeUp {
@@ -1223,10 +1333,15 @@ body::before {
       <span class="topbar-wordmark">X <span>Cabin</span></span>
     </div>
     <div class="topbar-actions">
-      <button class="icon-btn" onclick="saveDraft()" title="Sauvegarder">
+      <div class="lang-selector">
+        <button class="lang-btn active" onclick="setLang('fr',this)">FR</button>
+        <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+        <button class="lang-btn" onclick="setLang('es',this)">ES</button>
+      </div>
+      <button class="icon-btn" onclick="saveDraft()" id="btn-save">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 3.5A1.5 1.5 0 014.5 2h7.086a1.5 1.5 0 011.06.44l2.415 2.414A1.5 1.5 0 0115.5 5.914V14.5A1.5 1.5 0 0114 16H4.5A1.5 1.5 0 013 14.5v-11z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><rect x="6" y="2" width="6" height="4" rx="0.5" stroke="currentColor" stroke-width="1.1"/><rect x="5" y="10" width="8" height="6" rx="0.5" stroke="currentColor" stroke-width="1.1"/></svg>
       </button>
-      <button class="icon-btn" onclick="copyToClipboard()" title="Copier">
+      <button class="icon-btn" onclick="copyToClipboard()" id="btn-copy">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="6.5" y="6.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11.5 6.5V4.5A1.5 1.5 0 0010 3H4.5A1.5 1.5 0 003 4.5V10A1.5 1.5 0 004.5 11.5h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
       </button>
     </div>
@@ -1239,16 +1354,16 @@ body::before {
     <div id="p-compose" class="panel active scroll-body">
 
       <div class="section-head fade-up">
-        <div class="section-title">Composez <em>avec intention</em></div>
-        <div class="section-sub">Votre voix, votre style, votre audience.</div>
+        <div class="section-title" data-i18n="compose_title">Composez <em>avec intention</em></div>
+        <div class="section-sub" data-i18n="compose_sub">Votre voix, votre style, votre audience.</div>
       </div>
 
       <!-- Style pills -->
       <div class="style-scroll fade-up">
-        <button class="style-pill active" onclick="selectStyle(this,'default')">Neutre</button>
+        <button class="style-pill active" onclick="selectStyle(this,'default')" data-i18n="style_default">Neutre</button>
         <button class="style-pill" onclick="selectStyle(this,'alpha')">Alpha</button>
         <button class="style-pill" onclick="selectStyle(this,'defi')">DeFi</button>
-        <button class="style-pill" onclick="selectStyle(this,'viral')">Viral</button>
+        <button class="style-pill" onclick="selectStyle(this,'viral')" data-i18n="style_viral">Viral</button>
         <button class="style-pill" onclick="selectStyle(this,'hook')">Hook</button>
         <button class="style-pill" onclick="selectStyle(this,'insight')">Insight</button>
         <button class="style-pill" onclick="selectStyle(this,'thread')">Thread</button>
@@ -1256,9 +1371,9 @@ body::before {
 
       <!-- Mode tabs -->
       <div class="mode-tabs fade-up">
-        <button class="mode-tab active" onclick="setMode('tweet',this)">Tweet</button>
+        <button class="mode-tab active" onclick="setMode('tweet',this)" data-i18n="tab_tweet">Tweet</button>
         <button class="mode-tab" onclick="setMode('thread',this)">Thread</button>
-        <button class="mode-tab" onclick="setMode('preview',this)">Aperçu</button>
+        <button class="mode-tab" onclick="setMode('preview',this)" data-i18n="tab_preview">Aperçu</button>
       </div>
 
       <!-- TWEET MODE -->
@@ -1283,6 +1398,7 @@ body::before {
             </div>
             <textarea id="compose-textarea"
               placeholder="Qu'est-ce qui se passe sur Base aujourd'hui ?"
+              data-i18n-ph="compose_placeholder"
               oninput="onTextInput()"></textarea>
           </div>
 
@@ -1299,38 +1415,26 @@ body::before {
           </div>
         </div>
 
-        <!-- AI loading -->
-        <div id="ai-loading" class="ai-loading fade-up">
-          <div class="pulse-dots"><span></span><span></span><span></span></div>
-          <span style="font-size:13px;color:var(--fog)">Génération IA en cours...</span>
-        </div>
-
-        <!-- AI suggestion -->
-        <div id="ai-block" class="ai-block fade-up">
-          <button class="ai-dismiss" onclick="dismissAI()">×</button>
-          <div class="ai-label">Suggestion IA</div>
-          <div id="ai-text" class="ai-text"></div>
-          <div class="ai-actions">
-            <button class="btn btn-sm btn-gold" onclick="applyAI()">Appliquer</button>
-            <button class="btn btn-sm btn-ghost" onclick="dismissAI()">Ignorer</button>
-          </div>
-        </div>
-
         <!-- Media strip -->
         <div id="media-strip" class="media-strip fade-up"></div>
 
         <!-- Tip card -->
         <div class="tip-card fade-up">
-          <div class="tip-label">Conseil · style actif</div>
-          <div id="tip-text" class="tip-text">Sélectionnez un style pour voir les conseils de rédaction.</div>
+          <div class="tip-label" data-i18n="tip_label">Conseil · style actif</div>
+          <div id="tip-text" class="tip-text" data-i18n="tip_default">Sélectionnez un style pour voir les conseils de rédaction.</div>
         </div>
 
-        <!-- AI btn -->
+        <!-- Ask Claude button -->
         <div style="padding:0 14px 14px" class="fade-up">
-          <button class="btn btn-md btn-gold" style="width:100%" onclick="generateAI()">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
-            Améliorer avec IA
+          <button class="btn btn-md btn-ask-claude" style="width:100%" onclick="askClaude()">
+            <!-- Claude logomark -->
+            <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.43 8.4C21.11 5.46 18.72 4 16 4c-2.72 0-5.11 1.46-6.43 4.4L4 20h4.8l1.6-4h11.2l1.6 4H28L22.43 8.4zM11.6 13l2.2-5.5a2.4 2.4 0 014.4 0L20.4 13H11.6z" fill="currentColor"/>
+            </svg>
+            <span data-i18n="ai_btn">Demander à Claude</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="opacity:0.6"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
+          <div class="ask-claude-hint" data-i18n="ai_hint">Ouvre Claude.ai avec votre prompt prêt à l'emploi</div>
         </div>
       </div>
 
@@ -1339,14 +1443,14 @@ body::before {
         <div class="thread-container" id="thread-container"></div>
         <button class="thread-add-btn" onclick="addThread()">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Ajouter un tweet
+          <span data-i18n="thread_add">Ajouter un tweet</span>
         </button>
       </div>
 
       <!-- PREVIEW MODE -->
       <div id="mode-preview" style="display:none">
         <div class="preview-wrap">
-          <div class="preview-label">Aperçu X</div>
+          <div class="preview-label" data-i18n="preview_label">Aperçu X</div>
           <div class="x-card">
             <div class="x-card-header">
               <div class="x-avatar" id="xav-letter">G</div>
@@ -1355,7 +1459,7 @@ body::before {
                 <div class="x-handle" id="xav-handle">@GodCandleGroup</div>
               </div>
             </div>
-            <div id="x-text" class="x-text empty">Composez un tweet pour voir l'aperçu...</div>
+            <div id="x-text" class="x-text empty" data-i18n="preview_empty">Composez un tweet pour voir l'aperçu...</div>
             <div id="x-media" class="x-media"></div>
             <div class="x-actions">
               <span class="x-act">💬 0</span>
@@ -1374,14 +1478,14 @@ body::before {
     <!-- ═══ NOTES PANEL ═══ -->
     <div id="p-notes" class="panel scroll-body">
       <div class="section-head">
-        <div class="section-title">Mes <em>notes</em></div>
-        <div class="section-sub">Idées, recherches, brouillons en attente.</div>
+        <div class="section-title" data-i18n="notes_title">Mes <em>notes</em></div>
+        <div class="section-sub" data-i18n="notes_sub">Idées, recherches, brouillons en attente.</div>
       </div>
 
       <div class="notes-search-bar">
         <div class="search-input-wrap">
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#50506a" stroke-width="1.3"/><path d="M10 10l3.5 3.5" stroke="#50506a" stroke-width="1.3" stroke-linecap="round"/></svg>
-          <input id="notes-search" placeholder="Rechercher dans les notes..." oninput="filterNotes(this.value)">
+          <input id="notes-search" data-i18n-ph="notes_search" placeholder="Rechercher dans les notes..." oninput="filterNotes(this.value)">
         </div>
       </div>
 
@@ -1392,19 +1496,19 @@ body::before {
       <div id="note-sheet" class="note-sheet">
         <div class="note-sheet-head">
           <button class="note-sheet-close" onclick="closeNoteSheet()">‹</button>
-          <input class="note-title-input" id="note-title" placeholder="Titre..." oninput="saveNote()">
-          <button class="btn btn-sm btn-gold" onclick="sendNoteToCompose()">→ Composer</button>
+          <input class="note-title-input" id="note-title" data-i18n-ph="note_title_ph" placeholder="Titre..." oninput="saveNote()">
+          <button class="btn btn-sm btn-gold" onclick="sendNoteToCompose()" data-i18n="note_to_compose">→ Composer</button>
         </div>
         <div class="note-tag-row">
-          <button class="ntag-btn" onclick="setNoteTag('idea',this)">Idée</button>
-          <button class="ntag-btn" onclick="setNoteTag('draft',this)">Brouillon</button>
-          <button class="ntag-btn" onclick="setNoteTag('ready',this)">Prêt</button>
+          <button class="ntag-btn" onclick="setNoteTag('idea',this)" data-i18n="tag_idea">Idée</button>
+          <button class="ntag-btn" onclick="setNoteTag('draft',this)" data-i18n="tag_draft">Brouillon</button>
+          <button class="ntag-btn" onclick="setNoteTag('ready',this)" data-i18n="tag_ready">Prêt</button>
           <button class="ntag-btn" onclick="setNoteTag('thread',this)">Thread</button>
         </div>
-        <textarea class="note-body-input" id="note-body" placeholder="Écris ici..." oninput="saveNote()"></textarea>
+        <textarea class="note-body-input" id="note-body" data-i18n-ph="note_body_ph" placeholder="Écris ici..." oninput="saveNote()"></textarea>
         <div class="note-sheet-foot">
-          <button class="btn btn-md btn-ghost" onclick="deleteNote()" style="flex:1">Supprimer</button>
-          <button class="btn btn-md btn-gold" onclick="closeNoteSheet()" style="flex:1">Fermer</button>
+          <button class="btn btn-md btn-ghost" onclick="deleteNote()" style="flex:1" data-i18n="note_delete">Supprimer</button>
+          <button class="btn btn-md btn-gold" onclick="closeNoteSheet()" style="flex:1" data-i18n="note_close">Fermer</button>
         </div>
       </div>
     </div>
@@ -1412,15 +1516,15 @@ body::before {
     <!-- ═══ DRAFTS PANEL ═══ -->
     <div id="p-drafts" class="panel scroll-body">
       <div class="section-head">
-        <div class="section-title">Brouillons <em>sauvegardés</em></div>
+        <div class="section-title" data-i18n="drafts_title">Brouillons <em>sauvegardés</em></div>
         <div class="section-sub" id="drafts-count">0 brouillon</div>
       </div>
 
       <div class="drafts-filters">
-        <button class="filter-pill active" onclick="filterDrafts('all',this)">Tous</button>
+        <button class="filter-pill active" onclick="filterDrafts('all',this)" data-i18n="filter_all">Tous</button>
         <button class="filter-pill" onclick="filterDrafts('tweet',this)">Tweets</button>
         <button class="filter-pill" onclick="filterDrafts('thread',this)">Threads</button>
-        <button class="filter-pill" onclick="filterDrafts('idea',this)">Idées</button>
+        <button class="filter-pill" onclick="filterDrafts('idea',this)" data-i18n="filter_ideas">Idées</button>
       </div>
 
       <div id="drafts-list" class="drafts-list"></div>
@@ -1430,16 +1534,16 @@ body::before {
     <!-- ═══ SETTINGS PANEL ═══ -->
     <div id="p-settings" class="panel scroll-body">
       <div class="section-head">
-        <div class="section-title">Paramètres</div>
-        <div class="section-sub">Profil, composition, API.</div>
+        <div class="section-title" data-i18n="settings_title">Paramètres</div>
+        <div class="section-sub" data-i18n="settings_sub">Profil, composition, API.</div>
       </div>
 
       <div class="settings-list">
         <div class="settings-group">
-          <div class="settings-group-label">Profil X</div>
+          <div class="settings-group-label" data-i18n="s_profile">Profil X</div>
           <div class="settings-row">
             <span class="s-icon">👤</span>
-            <div class="s-info"><div class="s-label">Nom</div></div>
+            <div class="s-info"><div class="s-label" data-i18n="s_name">Nom</div></div>
             <input class="s-input" id="s-name" value="God Candle" oninput="updateProfile()">
           </div>
           <div class="settings-row">
@@ -1450,11 +1554,11 @@ body::before {
         </div>
 
         <div class="settings-group">
-          <div class="settings-group-label">Composition</div>
+          <div class="settings-group-label" data-i18n="s_compose">Composition</div>
           <div class="settings-row">
             <span class="s-icon">🔢</span>
             <div class="s-info">
-              <div class="s-label">Numéroter les threads</div>
+              <div class="s-label" data-i18n="s_number">Numéroter les threads</div>
               <div class="s-desc">1/, 2/, 3/...</div>
             </div>
             <button class="toggle-track on" onclick="this.classList.toggle('on')"></button>
@@ -1462,43 +1566,71 @@ body::before {
           <div class="settings-row">
             <span class="s-icon">💾</span>
             <div class="s-info">
-              <div class="s-label">Auto-sauvegarde</div>
-              <div class="s-desc">Toutes les 30 secondes</div>
+              <div class="s-label" data-i18n="s_autosave">Auto-sauvegarde</div>
+              <div class="s-desc" data-i18n="s_autosave_desc">Toutes les 30 secondes</div>
             </div>
             <button class="toggle-track on" onclick="this.classList.toggle('on')"></button>
           </div>
         </div>
 
+        <!-- ASK CLAUDE GROUP -->
         <div class="settings-group">
-          <div class="settings-group-label">Intelligence artificielle</div>
-          <div class="settings-row">
-            <span class="s-icon">🔑</span>
+          <div class="settings-group-label" data-i18n="s_ai">Intelligence artificielle</div>
+          <div class="settings-row" style="gap:14px">
+            <span class="s-icon">🤖</span>
             <div class="s-info">
-              <div class="s-label">Clé API Anthropic</div>
-              <div class="s-desc">Pour les suggestions réelles</div>
+              <div class="s-label" data-i18n="s_ai_mode_label">Mode Claude.ai</div>
+              <div class="s-desc" data-i18n="s_ai_mode_desc">Aucune clé requise — s'ouvre dans Claude</div>
             </div>
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 6px var(--green)"></div>
           </div>
-          <div style="padding: 0 16px 14px">
-            <input class="s-input" id="s-apikey" type="password" placeholder="sk-ant-api03-..."
-              style="width:100%" oninput="saveApiKey(this.value)">
+        </div>
+
+        <!-- HOW IT WORKS -->
+        <div class="api-guide" id="api-guide">
+          <div class="api-guide-head" onclick="toggleApiGuide()">
+            <span style="font-size:16px">💡</span>
+            <span class="api-guide-title" data-i18n="guide_title">Comment fonctionne l'IA dans X Cabin ?</span>
+            <span class="api-guide-chevron">▾</span>
           </div>
-          <div class="settings-row">
-            <span class="s-icon">✦</span>
-            <div class="s-info">
-              <div class="s-label">Suggestions actives</div>
-              <div class="s-desc">Amélioration automatique</div>
+          <div class="api-guide-body">
+            <div class="api-step">
+              <div class="api-step-num">1</div>
+              <div class="api-step-text" data-i18n="guide_step1">
+                Écrivez votre tweet dans le <strong>Compositeur</strong> et choisissez un style (Alpha, DeFi, Viral...).
+              </div>
             </div>
-            <button class="toggle-track on" onclick="this.classList.toggle('on')"></button>
+            <div class="api-step">
+              <div class="api-step-num">2</div>
+              <div class="api-step-text" data-i18n="guide_step2">
+                Appuyez sur <strong>"Demander à Claude"</strong>. X Cabin construit automatiquement un prompt optimisé selon votre style.
+              </div>
+            </div>
+            <div class="api-step">
+              <div class="api-step-num">3</div>
+              <div class="api-step-text" data-i18n="guide_step3">
+                <strong>Claude.ai s'ouvre</strong> dans un nouvel onglet avec le prompt pré-rempli. Claude répond instantanément.
+              </div>
+            </div>
+            <div class="api-step">
+              <div class="api-step-num">4</div>
+              <div class="api-step-text" data-i18n="guide_step4">
+                <strong>Copiez</strong> la réponse de Claude, revenez dans X Cabin et collez-la dans le Compositeur.
+              </div>
+            </div>
+            <div class="api-ok" data-i18n="guide_ok">
+              ✓ Gratuit, sans configuration, sans clé API. Requiert uniquement un compte Claude.ai (gratuit).
+            </div>
           </div>
         </div>
 
         <div class="settings-group">
-          <div class="settings-group-label">À propos</div>
+          <div class="settings-group-label" data-i18n="s_about">À propos</div>
           <div class="settings-row">
             <span class="s-icon">🏕️</span>
             <div class="s-info">
               <div class="s-label">X Cabin</div>
-              <div class="s-desc">Version 1.0 · Made for creators</div>
+              <div class="s-desc">Version 1.1 · Made for creators</div>
             </div>
           </div>
         </div>
@@ -1518,25 +1650,25 @@ body::before {
       <div class="nav-icon">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17.5l3.5-1 10-10a1.414 1.414 0 000-2L16 3a1.414 1.414 0 00-2 0l-10 10L2.5 17l1.5.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M14 5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
       </div>
-      <span class="nav-label">Composer</span>
+      <span class="nav-label" data-i18n="nav_compose">Composer</span>
     </button>
     <button class="nav-item" onclick="showPanel('notes',this)" id="nav-notes">
       <div class="nav-icon">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h14v14H4z" rx="1.5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 8h6M8 11h6M8 14h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       </div>
-      <span class="nav-label">Notes</span>
+      <span class="nav-label" data-i18n="nav_notes">Notes</span>
     </button>
     <button class="nav-item" onclick="showPanel('drafts',this)" id="nav-drafts">
       <div class="nav-icon">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 3h12a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7h6M8 11h6M8 15h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       </div>
-      <span class="nav-label">Brouillons</span>
+      <span class="nav-label" data-i18n="nav_drafts">Brouillons</span>
     </button>
     <button class="nav-item" onclick="showPanel('settings',this)" id="nav-settings">
       <div class="nav-icon">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M11 2v2M11 18v2M2 11h2M18 11h2M4.93 4.93l1.41 1.41M15.66 15.66l1.41 1.41M4.93 17.07l1.41-1.41M15.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       </div>
-      <span class="nav-label">Réglages</span>
+      <span class="nav-label" data-i18n="nav_settings">Réglages</span>
     </button>
   </nav>
 </div>
@@ -1546,49 +1678,222 @@ body::before {
 
 <script>
 // ═══════════════════════════════════════
+//  i18n TRANSLATIONS
+// ═══════════════════════════════════════
+const TRANSLATIONS = {
+  fr: {
+    compose_title:'Composez <em>avec intention</em>', compose_sub:'Votre voix, votre style, votre audience.',
+    style_default:'Neutre', style_viral:'Viral',
+    tab_tweet:'Tweet', tab_preview:'Aperçu',
+    compose_placeholder:"Qu'est-ce qui se passe sur Base aujourd'hui ?",
+    ai_loading:'Génération IA en cours...', ai_suggestion:'Suggestion IA',
+    ai_apply:'Appliquer', ai_dismiss:'Ignorer', ai_btn:'Améliorer avec IA',
+    tip_label:'Conseil · style actif', tip_default:'Sélectionnez un style pour voir les conseils de rédaction.',
+    thread_add:'Ajouter un tweet', thread_del:'Supprimer',
+    preview_label:'Aperçu X', preview_empty:"Composez un tweet pour voir l'aperçu...",
+    notes_title:'Mes <em>notes</em>', notes_sub:'Idées, recherches, brouillons en attente.',
+    notes_search:'Rechercher dans les notes...', note_title_ph:'Titre...', note_body_ph:'Écris ici...',
+    note_to_compose:'→ Composer', note_delete:'Supprimer', note_close:'Fermer',
+    tag_idea:'Idée', tag_draft:'Brouillon', tag_ready:'Prêt',
+    drafts_title:'Brouillons <em>sauvegardés</em>', filter_all:'Tous', filter_ideas:'Idées',
+    drafts_count_one:'brouillon', drafts_count_many:'brouillons',
+    type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
+    empty_notes_title:'Aucune note', empty_notes_sub:'Appuyez sur + pour créer votre première note.',
+    empty_drafts_title:'Aucun brouillon', empty_drafts_sub:'Sauvegardez un tweet depuis le Composer.',
+    settings_title:'Paramètres', settings_sub:'Profil, composition, API.',
+    s_profile:'Profil X', s_name:'Nom', s_compose:'Composition',
+    s_number:'Numéroter les threads', s_autosave:'Auto-sauvegarde', s_autosave_desc:'Toutes les 30 secondes',
+    s_ai:'Intelligence artificielle', s_apikey_label:'Clé API Anthropic', s_apikey_desc:'Pour les suggestions réelles',
+    s_ai_active:'Suggestions actives', s_ai_active_desc:'Amélioration automatique', s_about:'À propos',
+    guide_title:'Comment obtenir et configurer votre clé API',
+    guide_step1:'Rendez-vous sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> et créez un compte gratuit.',
+    guide_step2:'Dans le menu, allez dans <strong>API Keys</strong> → <strong>Create Key</strong>. Nommez-la <em>"X Cabin"</em>.',
+    guide_step3:'Copiez la clé (format <code>sk-ant-api03-...</code>). Elle n'est affichée qu'une seule fois.',
+    guide_step4:'Collez-la dans le champ <strong>Clé API Anthropic</strong> ci-dessus. Elle est sauvegardée localement sur votre appareil.',
+    guide_step5:'Ajoutez du crédit sur <a href="https://console.anthropic.com/settings/billing" target="_blank">la page Billing</a>. <strong>$5 suffisent pour des milliers de suggestions.</strong>',
+    guide_step6:'Retournez dans le <strong>Compositeur</strong>, écrivez un tweet, et appuyez sur <em>"Améliorer avec IA"</em>.',
+    guide_warn:"⚠️ L'app appelle l'API directement depuis votre navigateur. Pour la production, utilisez un backend proxy.",
+    guide_ok:"✓ Votre clé n'est jamais envoyée à nos serveurs — elle reste uniquement dans le localStorage de votre appareil.",
+    nav_compose:'Composer', nav_notes:'Notes', nav_drafts:'Brouillons', nav_settings:'Réglages',
+    t_compose_first:"Composez d'abord un tweet", t_max_media:'Maximum 4 médias par tweet',
+    t_copied:'Copié dans le presse-papiers', t_nothing_copy:'Rien à copier',
+    t_draft_saved:'Brouillon sauvegardé', t_nothing_save:'Rien à sauvegarder',
+    t_draft_loaded:'Brouillon chargé', t_draft_deleted:'Brouillon supprimé',
+    t_note_deleted:'Note supprimée', t_note_loaded:'Note chargée dans Composer', t_note_empty:'Note vide',
+    t_ai_applied:'Suggestion appliquée',
+    tip_default_text:"Écriture claire et directe. Idéal pour partager des informations factuelles sur Base L2 et l'écosystème EVM.",
+    tip_alpha:"⚡ Information exclusive en premier. 'Wallet X vient de déplacer 500K$' — prouve la valeur avant de conclure.",
+    tip_defi:"📊 Données d'abord. APY, TVL, volume — les chiffres parlent. Terminologie DeFi précise.",
+    tip_viral:"🔥 Opinion tranchée ou fait surprenant. Commence fort. L'inconfort crée l'engagement.",
+    tip_hook:"🎣 La première ligne = tout. Curiosity gap maximal. 'Voici pourquoi X va exploser'.",
+    tip_insight:"💡 Partage ce que les autres ne voient pas encore. Patterns on-chain, conclusions uniques.",
+    tip_thread:'🧵 Hook en 1/. Développe en 2-8/. Conclusion + CTA final. Chaque tweet doit valoir le scroll seul.',
+  },
+  en: {
+    compose_title:'Compose <em>with intention</em>', compose_sub:'Your voice, your style, your audience.',
+    style_default:'Neutral', style_viral:'Viral',
+    tab_tweet:'Tweet', tab_preview:'Preview',
+    compose_placeholder:"What's happening on Base today?",
+    ai_loading:'AI generation in progress...', ai_suggestion:'AI Suggestion',
+    ai_apply:'Apply', ai_dismiss:'Dismiss', ai_btn:'Enhance with AI',
+    tip_label:'Tip · active style', tip_default:'Select a style to see writing tips.',
+    thread_add:'Add a tweet', thread_del:'Delete',
+    preview_label:'X Preview', preview_empty:'Write a tweet to see the preview...',
+    notes_title:'My <em>notes</em>', notes_sub:'Ideas, research, pending drafts.',
+    notes_search:'Search notes...', note_title_ph:'Title...', note_body_ph:'Write here...',
+    note_to_compose:'→ Compose', note_delete:'Delete', note_close:'Close',
+    tag_idea:'Idea', tag_draft:'Draft', tag_ready:'Ready',
+    drafts_title:'<em>Saved</em> drafts', filter_all:'All', filter_ideas:'Ideas',
+    drafts_count_one:'draft', drafts_count_many:'drafts',
+    type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
+    empty_notes_title:'No notes yet', empty_notes_sub:'Tap + to create your first note.',
+    empty_drafts_title:'No drafts yet', empty_drafts_sub:'Save a tweet from the Composer.',
+    settings_title:'Settings', settings_sub:'Profile, composition, API.',
+    s_profile:'X Profile', s_name:'Name', s_compose:'Composition',
+    s_number:'Number threads', s_autosave:'Auto-save', s_autosave_desc:'Every 30 seconds',
+    s_ai:'Artificial intelligence', s_apikey_label:'Anthropic API Key', s_apikey_desc:'For real AI suggestions',
+    s_ai_active:'Active suggestions', s_ai_active_desc:'Automatic enhancement', s_about:'About',
+    guide_title:'How to get and set up your API key',
+    guide_step1:'Go to <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> and create a free account.',
+    guide_step2:'In the menu, go to <strong>API Keys</strong> → <strong>Create Key</strong>. Name it <em>"X Cabin"</em>.',
+    guide_step3:'Copy the key (format <code>sk-ant-api03-...</code>). It is only shown once.',
+    guide_step4:'Paste it into the <strong>Anthropic API Key</strong> field above. It is saved locally on your device.',
+    guide_step5:'Add credits on <a href="https://console.anthropic.com/settings/billing" target="_blank">the Billing page</a>. <strong>$5 covers thousands of suggestions.</strong>',
+    guide_step6:'Go back to the <strong>Composer</strong>, write a tweet, and tap <em>"Enhance with AI"</em>.',
+    guide_warn:'⚠️ The app calls the API directly from your browser. For production, use a backend proxy to protect your key.',
+    guide_ok:"✓ Your key is never sent to our servers — it stays only in your device's localStorage.",
+    nav_compose:'Compose', nav_notes:'Notes', nav_drafts:'Drafts', nav_settings:'Settings',
+    t_compose_first:'Write something first', t_max_media:'Maximum 4 media per tweet',
+    t_copied:'Copied to clipboard', t_nothing_copy:'Nothing to copy',
+    t_draft_saved:'Draft saved', t_nothing_save:'Nothing to save',
+    t_draft_loaded:'Draft loaded', t_draft_deleted:'Draft deleted',
+    t_note_deleted:'Note deleted', t_note_loaded:'Note loaded in Composer', t_note_empty:'Empty note',
+    t_ai_applied:'Suggestion applied',
+    tip_default_text:"Clear, direct writing. Ideal for sharing factual info about Base L2 and the EVM ecosystem.",
+    tip_alpha:"⚡ Exclusive info first. 'Wallet X just moved 500K$' — prove value before concluding. Confident tone.",
+    tip_defi:'📊 Data first. APY, TVL, volume — numbers speak. Precise DeFi terminology. Targets power users.',
+    tip_viral:"🔥 Sharp opinion or surprising fact. Start strong. Discomfort drives engagement.",
+    tip_hook:"🎣 The first line is everything. Maximum curiosity gap. 'Here's why X will explode'.",
+    tip_insight:"💡 Share what others don't see yet. On-chain patterns, unique conclusions.",
+    tip_thread:'🧵 Hook in 1/. Develop in 2-8/. Conclusion + CTA last. Every tweet must stand alone.',
+  },
+  es: {
+    compose_title:'Compone <em>con intención</em>', compose_sub:'Tu voz, tu estilo, tu audiencia.',
+    style_default:'Neutro', style_viral:'Viral',
+    tab_tweet:'Tweet', tab_preview:'Vista previa',
+    compose_placeholder:'¿Qué está pasando en Base hoy?',
+    ai_loading:'Generando con IA...', ai_suggestion:'Sugerencia IA',
+    ai_apply:'Aplicar', ai_dismiss:'Ignorar', ai_btn:'Mejorar con IA',
+    tip_label:'Consejo · estilo activo', tip_default:'Selecciona un estilo para ver los consejos de escritura.',
+    thread_add:'Añadir tweet', thread_del:'Eliminar',
+    preview_label:'Vista previa X', preview_empty:'Escribe un tweet para ver la vista previa...',
+    notes_title:'Mis <em>notas</em>', notes_sub:'Ideas, investigaciones, borradores pendientes.',
+    notes_search:'Buscar en notas...', note_title_ph:'Título...', note_body_ph:'Escribe aquí...',
+    note_to_compose:'→ Componer', note_delete:'Eliminar', note_close:'Cerrar',
+    tag_idea:'Idea', tag_draft:'Borrador', tag_ready:'Listo',
+    drafts_title:'Borradores <em>guardados</em>', filter_all:'Todos', filter_ideas:'Ideas',
+    drafts_count_one:'borrador', drafts_count_many:'borradores',
+    type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
+    empty_notes_title:'Sin notas', empty_notes_sub:'Pulsa + para crear tu primera nota.',
+    empty_drafts_title:'Sin borradores', empty_drafts_sub:'Guarda un tweet desde el Compositor.',
+    settings_title:'Ajustes', settings_sub:'Perfil, composición, API.',
+    s_profile:'Perfil X', s_name:'Nombre', s_compose:'Composición',
+    s_number:'Numerar hilos', s_autosave:'Guardado automático', s_autosave_desc:'Cada 30 segundos',
+    s_ai:'Inteligencia artificial', s_apikey_label:'Clave API Anthropic', s_apikey_desc:'Para sugerencias reales',
+    s_ai_active:'Sugerencias activas', s_ai_active_desc:'Mejora automática', s_about:'Acerca de',
+    guide_title:'Cómo obtener y configurar tu clave API',
+    guide_step1:'Ve a <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> y crea una cuenta gratuita.',
+    guide_step2:'En el menú, ve a <strong>API Keys</strong> → <strong>Create Key</strong>. Nómbrala <em>"X Cabin"</em>.',
+    guide_step3:'Copia la clave (formato <code>sk-ant-api03-...</code>). Solo se muestra una vez.',
+    guide_step4:'Pégala en el campo <strong>Clave API Anthropic</strong> arriba. Se guarda localmente en tu dispositivo.',
+    guide_step5:'Añade crédito en <a href="https://console.anthropic.com/settings/billing" target="_blank">la página de Billing</a>. <strong>$5 son suficientes para miles de sugerencias.</strong>',
+    guide_step6:'Vuelve al <strong>Compositor</strong>, escribe un tweet y pulsa <em>"Mejorar con IA"</em>.',
+    guide_warn:'⚠️ La app llama a la API directamente desde tu navegador. Para producción, usa un proxy backend para proteger tu clave.',
+    guide_ok:"✓ Tu clave nunca se envía a nuestros servidores — permanece solo en el localStorage de tu dispositivo.",
+    nav_compose:'Componer', nav_notes:'Notas', nav_drafts:'Borradores', nav_settings:'Ajustes',
+    t_compose_first:'Escribe algo primero', t_max_media:'Máximo 4 medios por tweet',
+    t_copied:'Copiado al portapapeles', t_nothing_copy:'Nada que copiar',
+    t_draft_saved:'Borrador guardado', t_nothing_save:'Nada que guardar',
+    t_draft_loaded:'Borrador cargado', t_draft_deleted:'Borrador eliminado',
+    t_note_deleted:'Nota eliminada', t_note_loaded:'Nota cargada en el Compositor', t_note_empty:'Nota vacía',
+    t_ai_applied:'Sugerencia aplicada',
+    tip_default_text:"Escritura clara y directa. Ideal para compartir info factual sobre Base L2 y el ecosistema EVM.",
+    tip_alpha:"⚡ Info exclusiva primero. 'La wallet X acaba de mover 500K$' — demuestra valor antes de concluir.",
+    tip_defi:'📊 Datos primero. APY, TVL, volumen — los números hablan. Terminología DeFi precisa.',
+    tip_viral:'🔥 Opinión tajante o hecho sorprendente. Empieza fuerte. La incomodidad genera engagement.',
+    tip_hook:"🎣 La primera línea es todo. Máximo curiosity gap. 'Por qué X va a explotar'.",
+    tip_insight:'💡 Comparte lo que otros aún no ven. Patrones on-chain, conclusiones únicas.',
+    tip_thread:'🧵 Hook en 1/. Desarrolla en 2-8/. Conclusión + CTA al final. Cada tweet debe valer el scroll.',
+  }
+};
+
+// ═══════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════
 const S = {
-  mode: 'tweet',
-  style: 'default',
-  medias: [],
-  notes: [],
-  drafts: [],
-  threads: [],
-  noteId: null,
-  noteTag: 'idea',
-  suggestion: null,
+  lang:'fr', mode:'tweet', style:'default',
+  medias:[], notes:[], drafts:[], threads:[],
+  noteId:null, noteTag:'idea', suggestion:null,
 };
 
-const STYLES = {
-  default: {
-    tip: 'Écriture claire et directe. Idéal pour partager des informations factuelles sur Base L2 et l\'écosystème EVM.',
-    prompt: t => `Améliore ce tweet pour X, garde le naturel et concis (max 280 chars), pas d'emojis excessifs. Tweet: ${t}`
-  },
-  alpha: {
-    tip: '⚡ Information exclusive en premier. "Wallet X vient de déplacer 500K$" — prouve la valeur avant de conclure. Ton confiant.',
-    prompt: t => `Réécris en style "alpha crypto" : info exclusive, ton confiant, chiffres concrets, max 260 chars, langage Web3. Tweet: ${t}`
-  },
-  defi: {
-    tip: '📊 Données d\'abord. APY, TVL, volume — les chiffres parlent. Terminologie DeFi précise. Cible les power users.',
-    prompt: t => `Réécris en style DeFi expert : données précises, terminologie DeFi/on-chain, ton analytique, max 270 chars. Tweet: ${t}`
-  },
-  viral: {
-    tip: '🔥 Opinion tranchée ou fait surprenant. Commence fort. Provoque une réaction. L\'inconfort crée l\'engagement.',
-    prompt: t => `Réécris pour maximiser l'engagement viral : opinion forte, angle inattendu, max 260 chars, adapté crypto X. Tweet: ${t}`
-  },
-  hook: {
-    tip: '🎣 La première ligne = tout. Curiosity gap maximal. "Voici pourquoi X va exploser" — rend la suite indispensable.',
-    prompt: t => `Réécris le début comme un hook irrésistible : curiosity gap, question rhétorique ou fait choquant, max 100 chars. Tweet: ${t}`
-  },
-  insight: {
-    tip: '💡 Partage ce que les autres ne voient pas encore. Analyse de tendances, patterns on-chain, conclusion unique.',
-    prompt: t => `Réécris comme un insight analytique profond : observation unique, raisonnement dense, max 270 chars. Tweet: ${t}`
-  },
-  thread: {
-    tip: '🧵 Hook en 1/. Développe en 2-8/. Conclusion + CTA final. Chaque tweet doit valoir le scroll seul.',
-    prompt: t => `Transforme en hook de thread X percutant (premier tweet uniquement), max 260 chars, donne envie de lire la suite. Contenu: ${t}`
-  },
+// ═══════════════════════════════════════
+//  i18n ENGINE
+// ═══════════════════════════════════════
+function t(key) {
+  return TRANSLATIONS[S.lang]?.[key] ?? TRANSLATIONS.fr[key] ?? key;
+}
+
+function applyLang() {
+  document.documentElement.lang = S.lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.getAttribute('data-i18n'));
+    if (v) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const v = t(el.getAttribute('data-i18n-ph'));
+    if (v) el.placeholder = v;
+  });
+  const tipEl = document.getElementById('tip-text');
+  if (tipEl && !tipEl.dataset.userSet) tipEl.innerHTML = t('tip_default');
+  const xText = document.getElementById('x-text');
+  if (xText && xText.classList.contains('empty')) xText.textContent = t('preview_empty');
+  renderNotesList();
+  renderDraftsList();
+  if (S.mode === 'thread') renderThreads();
+  persist();
+}
+
+function setLang(lang, btn) {
+  S.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyLang();
+  if (S.style !== 'default') {
+    const tipEl = document.getElementById('tip-text');
+    if (tipEl) { tipEl.innerHTML = t('tip_'+S.style); tipEl.dataset.userSet='1'; }
+  }
+}
+
+// ═══════════════════════════════════════
+//  AI PROMPTS (always in French for quality)
+// ═══════════════════════════════════════
+const STYLE_PROMPTS = {
+  default: tx => `Améliore ce tweet pour X, naturel et concis (max 280 chars), sans emojis excessifs. Tweet: ${tx}`,
+  alpha:   tx => `Réécris en style alpha crypto : info exclusive, ton confiant, chiffres concrets, max 260 chars. Tweet: ${tx}`,
+  defi:    tx => `Réécris en style DeFi expert : données précises, terminologie on-chain, ton analytique, max 270 chars. Tweet: ${tx}`,
+  viral:   tx => `Réécris pour maximiser l'engagement viral : opinion forte, angle inattendu, max 260 chars. Tweet: ${tx}`,
+  hook:    tx => `Réécris comme hook irrésistible : curiosity gap maximal, max 100 chars. Tweet: ${tx}`,
+  insight: tx => `Réécris comme insight analytique profond : observation unique, raisonnement dense, max 270 chars. Tweet: ${tx}`,
+  thread:  tx => `Transforme en hook de thread percutant (premier tweet uniquement), max 260 chars. Contenu: ${tx}`,
+};
+
+const DEMOS = {
+  alpha:   '🚨 500K$ vient de quitter un wallet dormant sur Base. Mouvement inhabituel. Tracking en cours 👀',
+  viral:   "Unpopular opinion : 90% des projets Base actuels n'existeront plus dans 18 mois. Mais les 10% restants vont tout changer.",
+  defi:    'APY 340% sur le nouveau pool Base/ETH. TVL $2.1M. Audité, 0 incidents en 3 mois. Fenêtre étroite.',
+  hook:    "Ce wallet a fait ×47 en 6 semaines. Voici exactement comment il a repéré l'entrée...",
+  insight: 'Les wallets les plus rentables sur Base entrent tous sur des protocoles avec moins de 500K TVL. Voici pourquoi.',
+  thread:  '🧵 Tout ce que tu dois savoir sur les AI agents on-chain en 2026 — et pourquoi Base est le meilleur terrain de jeu',
 };
 
 // ═══════════════════════════════════════
@@ -1599,10 +1904,10 @@ function init() {
   renderThreads();
   renderNotesList();
   renderDraftsList();
-  // seed
   if (!S.threads.length) { addThread(); addThread(); }
   document.getElementById('compose-textarea').addEventListener('input', updatePreview);
   setInterval(() => { if (S.noteId) saveNote(); }, 30000);
+  applyLang();
 }
 
 // ═══════════════════════════════════════
@@ -1611,11 +1916,10 @@ function init() {
 function showPanel(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('p-' + id).classList.add('active');
+  document.getElementById('p-'+id).classList.add('active');
   btn.classList.add('active');
-  const fab = document.getElementById('notes-fab');
-  fab.style.display = id === 'notes' ? 'flex' : 'none';
-  if (id === 'drafts') renderDraftsList();
+  document.getElementById('notes-fab').style.display = id==='notes' ? 'flex' : 'none';
+  if (id==='drafts') renderDraftsList();
 }
 
 // ═══════════════════════════════════════
@@ -1626,10 +1930,11 @@ function setMode(m, btn) {
   document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   ['tweet','thread','preview'].forEach(id => {
-    const el = document.getElementById('mode-' + id);
-    if (el) el.style.display = id === m ? 'block' : 'none';
+    const el = document.getElementById('mode-'+id);
+    if (el) el.style.display = id===m ? 'block' : 'none';
   });
-  if (m === 'preview') updatePreview();
+  if (m==='preview') updatePreview();
+  if (m==='thread') renderThreads();
 }
 
 // ═══════════════════════════════════════
@@ -1639,7 +1944,11 @@ function selectStyle(btn, key) {
   document.querySelectorAll('.style-pill').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   S.style = key;
-  document.getElementById('tip-text').textContent = STYLES[key]?.tip || '';
+  const tipEl = document.getElementById('tip-text');
+  if (tipEl) {
+    tipEl.innerHTML = t(key==='default' ? 'tip_default_text' : 'tip_'+key);
+    tipEl.dataset.userSet = '1';
+  }
 }
 
 // ═══════════════════════════════════════
@@ -1650,34 +1959,25 @@ function onTextInput() {
   const max = 280;
   document.getElementById('char-num').textContent = len;
   const ring = document.getElementById('ring');
-  const circ = 69.1;
-  const off = circ - Math.min(len / max, 1) * circ;
-  ring.style.strokeDashoffset = off;
-  ring.style.stroke = len > max ? 'var(--red)' : len > 240 ? '#f5a623' : 'var(--gold)';
-  document.getElementById('char-num').style.color = len > max ? 'var(--red)' : len > 240 ? '#f5a623' : 'var(--fog)';
+  ring.style.strokeDashoffset = 69.1 - Math.min(len/max,1)*69.1;
+  ring.style.stroke = len>max ? 'var(--red)' : len>240 ? '#f5a623' : 'var(--gold)';
+  document.getElementById('char-num').style.color = len>max ? 'var(--red)' : len>240 ? '#f5a623' : 'var(--fog)';
 }
 
 function updatePreview() {
   const text = document.getElementById('compose-textarea').value;
   const el = document.getElementById('x-text');
-  if (text.trim()) {
-    el.textContent = text;
-    el.classList.remove('empty');
-  } else {
-    el.textContent = 'Composez un tweet pour voir l\'aperçu...';
-    el.classList.add('empty');
-  }
+  if (text.trim()) { el.textContent=text; el.classList.remove('empty'); }
+  else { el.textContent=t('preview_empty'); el.classList.add('empty'); }
   updateMediaPreview();
 }
 
 function updateMediaPreview() {
   const el = document.getElementById('x-media');
-  if (!S.medias.length) { el.style.display = 'none'; return; }
-  el.style.display = 'block';
-  const n = Math.min(S.medias.length, 4);
-  el.innerHTML = `<div class="x-media-grid g${n}">${S.medias.slice(0,4).map(m =>
-    `<div class="x-media-item"><img src="${m.url}"></div>`
-  ).join('')}</div>`;
+  if (!S.medias.length) { el.style.display='none'; return; }
+  el.style.display='block';
+  const n = Math.min(S.medias.length,4);
+  el.innerHTML = `<div class="x-media-grid g${n}">${S.medias.slice(0,4).map(m=>`<div class="x-media-item"><img src="${m.url}"></div>`).join('')}</div>`;
 }
 
 // ═══════════════════════════════════════
@@ -1687,45 +1987,38 @@ function triggerMedia() { document.getElementById('file-in').click(); }
 
 function handleFiles(files) {
   Array.from(files).forEach(f => {
-    if (S.medias.length >= 4) { toast('Maximum 4 médias par tweet', 'err'); return; }
-    const r = new FileReader();
-    r.onload = e => {
-      S.medias.push({ url: e.target.result, name: f.name });
-      renderMediaStrip();
-    };
+    if (S.medias.length>=4) { toast(t('t_max_media'),'err'); return; }
+    const r=new FileReader();
+    r.onload=e=>{S.medias.push({url:e.target.result,name:f.name}); renderMediaStrip();};
     r.readAsDataURL(f);
   });
-  document.getElementById('file-in').value = '';
+  document.getElementById('file-in').value='';
 }
 
 function renderMediaStrip() {
   const el = document.getElementById('media-strip');
-  el.innerHTML = S.medias.map((m,i) => `
-    <div class="media-thumb">
-      <img src="${m.url}">
+  el.innerHTML = S.medias.map((m,i)=>`
+    <div class="media-thumb"><img src="${m.url}">
       <button class="media-remove" onclick="removeMedia(${i})">×</button>
-    </div>
-  `).join('') + (S.medias.length < 4 ? `<button class="media-add" onclick="triggerMedia()">+</button>` : '');
+    </div>`).join('')
+    + (S.medias.length<4?`<button class="media-add" onclick="triggerMedia()">+</button>`:'');
   updateMediaPreview();
 }
 
-function removeMedia(i) {
-  S.medias.splice(i,1);
-  renderMediaStrip();
-}
+function removeMedia(i) { S.medias.splice(i,1); renderMediaStrip(); }
 
 // ═══════════════════════════════════════
 //  THREAD
 // ═══════════════════════════════════════
 function renderThreads() {
   const el = document.getElementById('thread-container');
-  const name = getName(); const initial = name[0] || 'G';
-  const total = S.threads.length;
-  el.innerHTML = S.threads.map((t,i) => `
+  if (!el) return;
+  const name=getName(), initial=name[0]||'G', total=S.threads.length;
+  el.innerHTML = S.threads.map((tx,i)=>`
     <div class="thread-tweet fade-up">
       <div class="thread-col">
         <div class="thread-avatar">${initial}</div>
-        ${i < total-1 ? '<div class="thread-line"></div>' : ''}
+        ${i<total-1?'<div class="thread-line"></div>':''}
       </div>
       <div class="thread-body">
         <div class="thread-meta">
@@ -1734,30 +2027,21 @@ function renderThreads() {
           <span class="thread-num">${i+1}/${total}</span>
         </div>
         <textarea class="thread-input" placeholder="Tweet ${i+1}..."
-          oninput="updateThread(${i},this.value)">${t}</textarea>
+          oninput="updateThread(${i},this.value)">${tx}</textarea>
         <div class="thread-foot">
-          <span class="thread-count">${t.length}/280</span>
-          ${total > 1 ? `<button class="thread-del" onclick="removeThread(${i})">Supprimer</button>` : ''}
+          <span class="thread-count">${tx.length}/280</span>
+          ${total>1?`<button class="thread-del" onclick="removeThread(${i})">${t('thread_del')}</button>`:''}
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function addThread() {
-  S.threads.push('');
-  renderThreads();
-}
-
-function removeThread(i) {
-  S.threads.splice(i,1);
-  renderThreads();
-}
-
-function updateThread(i, v) {
-  S.threads[i] = v;
-  const counts = document.querySelectorAll('.thread-count');
-  if (counts[i]) counts[i].textContent = `${v.length}/280`;
+function addThread()        { S.threads.push(''); renderThreads(); }
+function removeThread(i)    { S.threads.splice(i,1); renderThreads(); }
+function updateThread(i,v)  {
+  S.threads[i]=v;
+  const c=document.querySelectorAll('.thread-count');
+  if(c[i]) c[i].textContent=`${v.length}/280`;
 }
 
 // ═══════════════════════════════════════
@@ -1765,257 +2049,227 @@ function updateThread(i, v) {
 // ═══════════════════════════════════════
 async function generateAI() {
   const text = document.getElementById('compose-textarea').value.trim();
-  if (!text) { toast('Composez d\'abord un tweet', 'err'); return; }
-  const styleObj = STYLES[S.style];
+  if (!text) { toast(t('t_compose_first'),'err'); return; }
   document.getElementById('ai-loading').classList.add('visible');
   document.getElementById('ai-block').classList.remove('visible');
+  const apiKey = localStorage.getItem('xcabin_key')||'';
+  const prompt = (STYLE_PROMPTS[S.style]||STYLE_PROMPTS.default)(text);
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    if (!apiKey) throw new Error('no_key');
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true',
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: styleObj.prompt(text) }]
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        messages:[{role:'user',content:prompt}]
       })
     });
+    if (!res.ok) throw new Error('api_error');
     const data = await res.json();
     const sug = data.content?.[0]?.text?.trim();
-    if (sug) { showSuggestion(sug); }
-    else { fallbackSuggestion(text); }
-  } catch { fallbackSuggestion(text); }
+    if (sug) showSuggestion(sug); else throw new Error('empty');
+  } catch(e) {
+    const demo = DEMOS[S.style];
+    showSuggestion(demo || (apiKey
+      ? '⚠️ API error — check your key or credit balance in console.anthropic.com.'
+      : '→ Add your Anthropic API key in Settings → AI to activate real suggestions.'));
+  }
   document.getElementById('ai-loading').classList.remove('visible');
 }
 
-const DEMOS = {
-  alpha: '🚨 500K$ vient de quitter un wallet dormant sur Base. Mouvement inhabituel pour ce token. Tracking en cours 👀',
-  viral: 'Unpopular opinion : 90% des projets Base actuels n\'existeront plus dans 18 mois. Mais les 10% restants vont tout changer.',
-  defi: 'APY 340% sur le nouveau pool Base/ETH. TVL $2.1M. Protocole audité, 0 incidents en 3 mois. Fenêtre étroite avant compression.',
-  hook: 'Ce wallet a fait ×47 en 6 semaines. Voici exactement comment il a repéré l\'entrée...',
-  insight: 'Les wallets les plus rentables sur Base ont tous un pattern commun : ils entrent sur des protocoles avec moins de 500K TVL. Voici pourquoi.',
-  thread: '🧵 Tout ce que tu dois savoir sur les AI agents on-chain en 2026 (et pourquoi Base est l\'endroit le plus intéressant pour les suivre)',
-  default: 'Ajoutez votre clé API Anthropic dans Réglages pour activer les suggestions IA réelles.',
-};
-
-function fallbackSuggestion(text) {
-  showSuggestion(DEMOS[S.style] || DEMOS.default);
-}
-
 function showSuggestion(text) {
-  S.suggestion = text;
-  document.getElementById('ai-text').textContent = text;
+  S.suggestion=text;
+  document.getElementById('ai-text').textContent=text;
   document.getElementById('ai-block').classList.add('visible');
 }
-
 function applyAI() {
-  if (!S.suggestion) return;
-  document.getElementById('compose-textarea').value = S.suggestion;
-  onTextInput();
-  dismissAI();
-  toast('Suggestion appliquée', 'ok');
+  if(!S.suggestion) return;
+  document.getElementById('compose-textarea').value=S.suggestion;
+  onTextInput(); dismissAI();
+  toast(t('t_ai_applied'),'ok');
 }
-
-function dismissAI() {
-  document.getElementById('ai-block').classList.remove('visible');
-  S.suggestion = null;
-}
+function dismissAI() { document.getElementById('ai-block').classList.remove('visible'); S.suggestion=null; }
 
 // ═══════════════════════════════════════
 //  COPY / DRAFT
 // ═══════════════════════════════════════
 function copyToClipboard() {
-  const text = S.mode === 'thread'
-    ? S.threads.map((t,i) => `${i+1}/ ${t}`).filter(t => t.trim()).join('\n\n')
+  const text = S.mode==='thread'
+    ? S.threads.map((tx,i)=>`${i+1}/ ${tx}`).filter(Boolean).join('\n\n')
     : document.getElementById('compose-textarea').value;
-  if (!text.trim()) { toast('Rien à copier', 'err'); return; }
-  navigator.clipboard.writeText(text).then(() => toast('Copié dans le presse-papiers', 'ok'));
+  if (!text.trim()) { toast(t('t_nothing_copy'),'err'); return; }
+  navigator.clipboard.writeText(text).then(()=>toast(t('t_copied'),'ok'));
 }
 
 function saveDraft() {
-  const text = S.mode === 'thread'
+  const text = S.mode==='thread'
     ? S.threads.filter(Boolean).join('\n---\n')
     : document.getElementById('compose-textarea').value.trim();
-  if (!text) { toast('Rien à sauvegarder', 'err'); return; }
-  S.drafts.unshift({
-    id: Date.now(),
-    type: S.mode === 'thread' ? 'thread' : 'tweet',
-    text: text.slice(0,160),
-    full: text,
-    date: fmtDate(),
-  });
-  persist();
-  toast('Brouillon sauvegardé', 'ok');
+  if (!text) { toast(t('t_nothing_save'),'err'); return; }
+  S.drafts.unshift({id:Date.now(),type:S.mode==='thread'?'thread':'tweet',text:text.slice(0,160),full:text,date:fmtDate()});
+  persist(); toast(t('t_draft_saved'),'ok');
 }
+
+// ═══════════════════════════════════════
+//  API GUIDE
+// ═══════════════════════════════════════
+function toggleApiGuide() { document.getElementById('api-guide').classList.toggle('open'); }
 
 // ═══════════════════════════════════════
 //  NOTES
 // ═══════════════════════════════════════
 function createNote() {
-  const n = { id: Date.now(), title: '', body: '', tag: 'idea', date: fmtDate() };
-  S.notes.unshift(n);
-  persist();
-  openNoteSheet(n.id);
-  renderNotesList();
+  const n={id:Date.now(),title:'',body:'',tag:'idea',date:fmtDate()};
+  S.notes.unshift(n); persist(); openNoteSheet(n.id); renderNotesList();
 }
 
 function openNoteSheet(id) {
-  S.noteId = id;
-  const n = S.notes.find(x => x.id === id);
-  if (!n) return;
-  document.getElementById('note-title').value = n.title;
-  document.getElementById('note-body').value = n.body;
-  S.noteTag = n.tag;
-  updateNoteTagBtns(n.tag);
+  S.noteId=id;
+  const n=S.notes.find(x=>x.id===id); if(!n) return;
+  document.getElementById('note-title').value=n.title;
+  document.getElementById('note-body').value=n.body;
+  S.noteTag=n.tag; updateNoteTagBtns(n.tag);
   document.getElementById('note-sheet').classList.add('open');
 }
 
 function closeNoteSheet() {
   document.getElementById('note-sheet').classList.remove('open');
-  S.noteId = null;
-  renderNotesList();
+  S.noteId=null; renderNotesList();
 }
 
 function saveNote() {
   if (!S.noteId) return;
-  const i = S.notes.findIndex(x => x.id === S.noteId);
-  if (i < 0) return;
-  S.notes[i].title = document.getElementById('note-title').value || 'Sans titre';
-  S.notes[i].body = document.getElementById('note-body').value;
-  S.notes[i].tag = S.noteTag;
-  S.notes[i].date = fmtDate();
-  persist();
+  const i=S.notes.findIndex(x=>x.id===S.noteId); if(i<0) return;
+  S.notes[i].title=document.getElementById('note-title').value||t('note_title_ph');
+  S.notes[i].body=document.getElementById('note-body').value;
+  S.notes[i].tag=S.noteTag; S.notes[i].date=fmtDate(); persist();
 }
 
 function deleteNote() {
   if (!S.noteId) return;
-  S.notes = S.notes.filter(n => n.id !== S.noteId);
-  persist();
-  closeNoteSheet();
-  toast('Note supprimée', 'inf');
+  S.notes=S.notes.filter(n=>n.id!==S.noteId); persist();
+  closeNoteSheet(); toast(t('t_note_deleted'),'inf');
 }
 
-function setNoteTag(tag, btn) {
-  S.noteTag = tag;
-  updateNoteTagBtns(tag);
-  saveNote();
+function setNoteTag(tag) {
+  S.noteTag=tag; updateNoteTagBtns(tag); saveNote();
 }
 
 function updateNoteTagBtns(tag) {
-  document.querySelectorAll('.ntag-btn').forEach(b => {
-    b.className = 'ntag-btn';
-    const t = b.textContent === 'Idée' ? 'idea' : b.textContent === 'Brouillon' ? 'draft' : b.textContent === 'Prêt' ? 'ready' : 'thread';
-    if (t === tag) b.className = `ntag-btn active-${tag}`;
+  const tagMap={'tag_idea':'idea','tag_draft':'draft','tag_ready':'ready'};
+  document.querySelectorAll('.ntag-btn').forEach(b=>{
+    b.className='ntag-btn';
+    const k=b.getAttribute('data-i18n');
+    const bt=tagMap[k]||'thread';
+    if(bt===tag) b.className=`ntag-btn active-${tag}`;
   });
 }
 
-function renderNotesList(filter = '') {
-  const el = document.getElementById('notes-list');
-  const notes = filter ? S.notes.filter(n => (n.title+n.body).toLowerCase().includes(filter)) : S.notes;
+function renderNotesList(filter='') {
+  const el=document.getElementById('notes-list'); if(!el) return;
+  const notes=filter?S.notes.filter(n=>(n.title+n.body).toLowerCase().includes(filter)):S.notes;
   if (!notes.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">Aucune note</div><div class="empty-sub">Appuyez sur + pour créer votre première note.</div></div>`;
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📝</div>
+      <div class="empty-title">${t('empty_notes_title')}</div>
+      <div class="empty-sub">${t('empty_notes_sub')}</div></div>`;
     return;
   }
-  el.innerHTML = notes.map(n => `
-    <div class="note-card tag-${n.tag} ${n.id === S.noteId ? 'selected' : ''} fade-up" onclick="openNoteSheet(${n.id})">
-      <div class="note-card-title">${n.title || 'Sans titre'}</div>
-      <div class="note-card-preview">${n.body || 'Note vide...'}</div>
+  el.innerHTML=notes.map(n=>`
+    <div class="note-card tag-${n.tag} ${n.id===S.noteId?'selected':''} fade-up" onclick="openNoteSheet(${n.id})">
+      <div class="note-card-title">${n.title||'…'}</div>
+      <div class="note-card-preview">${n.body||'…'}</div>
       <div class="note-card-foot">
-        <span class="tag-badge ${n.tag}">${n.tag}</span>
+        <span class="tag-badge ${n.tag}">${t('tag_'+n.tag)||n.tag}</span>
         <span class="note-date">${n.date}</span>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function filterNotes(q) { renderNotesList(q.toLowerCase()); }
 
 function sendNoteToCompose() {
-  const body = document.getElementById('note-body').value.trim();
-  if (!body) { toast('Note vide', 'err'); return; }
-  document.getElementById('compose-textarea').value = body.slice(0,280);
-  onTextInput();
-  closeNoteSheet();
-  showPanel('compose', document.getElementById('nav-compose'));
-  toast('Note chargée dans Composer', 'ok');
+  const body=document.getElementById('note-body').value.trim();
+  if (!body) { toast(t('t_note_empty'),'err'); return; }
+  document.getElementById('compose-textarea').value=body.slice(0,280);
+  onTextInput(); closeNoteSheet();
+  showPanel('compose',document.getElementById('nav-compose'));
+  toast(t('t_note_loaded'),'ok');
 }
 
 // ═══════════════════════════════════════
 //  DRAFTS
 // ═══════════════════════════════════════
-function renderDraftsList(filter = 'all') {
-  const el = document.getElementById('drafts-list');
-  const drafts = filter === 'all' ? S.drafts : S.drafts.filter(d => d.type === filter);
-  const cnt = document.getElementById('drafts-count');
-  cnt.textContent = `${drafts.length} brouillon${drafts.length > 1 ? 's' : ''}`;
+function renderDraftsList(filter='all') {
+  const el=document.getElementById('drafts-list'); if(!el) return;
+  const drafts=filter==='all'?S.drafts:S.drafts.filter(d=>d.type===filter);
+  const cnt=document.getElementById('drafts-count');
+  if(cnt) cnt.textContent=`${drafts.length} ${drafts.length>1?t('drafts_count_many'):t('drafts_count_one')}`;
   if (!drafts.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📁</div><div class="empty-title">Aucun brouillon</div><div class="empty-sub">Sauvegardez un tweet depuis le Composer.</div></div>`;
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📁</div>
+      <div class="empty-title">${t('empty_drafts_title')}</div>
+      <div class="empty-sub">${t('empty_drafts_sub')}</div></div>`;
     return;
   }
-  el.innerHTML = drafts.map(d => `
+  el.innerHTML=drafts.map(d=>`
     <div class="draft-card dt-${d.type} fade-up">
       <div class="draft-card-bar"></div>
-      <div class="draft-type-label">${d.type === 'thread' ? '🧵 Thread' : '✏️ Tweet'}</div>
+      <div class="draft-type-label">${d.type==='thread'?t('type_thread'):t('type_tweet')}</div>
       <div class="draft-text">${d.text}</div>
       <div class="draft-foot">
         <span class="draft-date">${d.date}</span>
         <div class="draft-actions">
-          <button class="draft-act" onclick="loadDraft(${d.id})" title="Charger">→</button>
-          <button class="draft-act del" onclick="deleteDraft(${d.id})" title="Supprimer">×</button>
+          <button class="draft-act" onclick="loadDraft(${d.id})">→</button>
+          <button class="draft-act del" onclick="deleteDraft(${d.id})">×</button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function filterDrafts(f, btn) {
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  renderDraftsList(f);
+function filterDrafts(f,btn) {
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active'); renderDraftsList(f);
 }
 
 function loadDraft(id) {
-  const d = S.drafts.find(x => x.id === id);
-  if (!d) return;
-  document.getElementById('compose-textarea').value = d.full || d.text;
-  onTextInput();
-  showPanel('compose', document.getElementById('nav-compose'));
-  toast('Brouillon chargé', 'ok');
+  const d=S.drafts.find(x=>x.id===id); if(!d) return;
+  document.getElementById('compose-textarea').value=d.full||d.text;
+  onTextInput(); showPanel('compose',document.getElementById('nav-compose'));
+  toast(t('t_draft_loaded'),'ok');
 }
 
 function deleteDraft(id) {
-  S.drafts = S.drafts.filter(d => d.id !== id);
-  persist();
-  renderDraftsList();
-  toast('Brouillon supprimé', 'inf');
+  S.drafts=S.drafts.filter(d=>d.id!==id); persist(); renderDraftsList();
+  toast(t('t_draft_deleted'),'inf');
 }
 
 // ═══════════════════════════════════════
 //  PROFILE
 // ═══════════════════════════════════════
 function updateProfile() {
-  const name = getName(); const handle = getHandle();
-  document.getElementById('av-name').textContent = name;
-  document.getElementById('av-handle').textContent = handle;
-  document.getElementById('av-letter').textContent = name[0] || 'G';
-  document.getElementById('xav-name').textContent = name;
-  document.getElementById('xav-handle').textContent = handle;
-  document.getElementById('xav-letter').textContent = name[0] || 'G';
+  const name=getName(), handle=getHandle();
+  ['av-name','xav-name'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=name;});
+  ['av-handle','xav-handle'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='@'+handle;});
+  ['av-letter','xav-letter'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=name[0]||'G';});
   renderThreads();
 }
-function getName()   { return document.getElementById('s-name')?.value || 'God Candle'; }
-function getHandle() { return document.getElementById('s-handle')?.value.replace('@','') || 'GodCandleGroup'; }
+function getName()   { return document.getElementById('s-name')?.value||'God Candle'; }
+function getHandle() { return (document.getElementById('s-handle')?.value||'GodCandleGroup').replace('@',''); }
 
 // ═══════════════════════════════════════
-//  EMOJI INSERTION
+//  EMOJI
 // ═══════════════════════════════════════
 function insertEmoji(e) {
-  const ta = document.getElementById('compose-textarea');
-  const pos = ta.selectionStart;
-  const v = ta.value;
-  ta.value = v.slice(0,pos) + e + v.slice(pos);
-  ta.selectionStart = ta.selectionEnd = pos + e.length;
-  ta.focus();
-  onTextInput();
+  const ta=document.getElementById('compose-textarea');
+  const pos=ta.selectionStart;
+  ta.value=ta.value.slice(0,pos)+e+ta.value.slice(pos);
+  ta.selectionStart=ta.selectionEnd=pos+e.length;
+  ta.focus(); onTextInput();
 }
 
 // ═══════════════════════════════════════
@@ -2024,54 +2278,52 @@ function insertEmoji(e) {
 function persist() {
   try {
     localStorage.setItem('xcabin_notes', JSON.stringify(S.notes));
-    localStorage.setItem('xcabin_drafts', JSON.stringify(S.drafts));
-  } catch(e) {}
+    localStorage.setItem('xcabin_drafts',JSON.stringify(S.drafts));
+    localStorage.setItem('xcabin_lang',  S.lang);
+  } catch(e){}
 }
 
 function loadData() {
   try {
-    const n = localStorage.getItem('xcabin_notes');
-    if (n) S.notes = JSON.parse(n);
-    const d = localStorage.getItem('xcabin_drafts');
-    if (d) S.drafts = JSON.parse(d);
-    const k = localStorage.getItem('xcabin_key');
-    if (k) document.getElementById('s-apikey').value = k;
-  } catch(e) {}
-  if (!S.notes.length) {
-    S.notes = [
-      { id: 1, title: 'Thread — Écosystème Base L2', body: 'Idées :\n- Wallet tracking avancé\n- AI agents on-chain\n- Nouveaux protocoles DeFi\n- Analyse des gas fees', tag: 'idea', date: '15 mars' },
-      { id: 2, title: '$CLICK & ERC-7710', body: 'ERC-7710 = standard pour permissions déléguées sur EVM. $CLICK = premier token majeur à l\'implémenter. Potentiel énorme pour AI agents.', tag: 'draft', date: '14 mars' },
-    ];
-  }
-  if (!S.drafts.length) {
-    S.drafts = [
-      { id: 1, type: 'tweet', text: '🚨 Base atteint 1M de transactions quotidiennes pour la première fois. Ce n\'est plus une L2 parmi d\'autres.', full: '🚨 Base atteint 1M de transactions quotidiennes pour la première fois. Ce n\'est plus une L2 parmi d\'autres.', date: '15 mars' },
-      { id: 2, type: 'thread', text: '🧵 Tout ce que tu dois savoir sur les AI agents on-chain (thread)...', full: '1/ AI agents on-chain\n---\n2/ Ils signent des transactions de manière autonome\n---\n3/ ERC-7710 change tout', date: '13 mars' },
-    ];
-  }
+    const n=localStorage.getItem('xcabin_notes');  if(n) S.notes =JSON.parse(n);
+    const d=localStorage.getItem('xcabin_drafts'); if(d) S.drafts=JSON.parse(d);
+    const k=localStorage.getItem('xcabin_key');    if(k) document.getElementById('s-apikey').value=k;
+    const l=localStorage.getItem('xcabin_lang');
+    if(l&&['fr','en','es'].includes(l)){
+      S.lang=l;
+      document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===l));
+    }
+  } catch(e){}
+  if (!S.notes.length) S.notes=[
+    {id:1,title:'Thread — Écosystème Base L2',body:'Idées :\n- Wallet tracking avancé\n- AI agents on-chain\n- Nouveaux protocoles DeFi',tag:'idea',date:'15 mars'},
+    {id:2,title:'$CLICK & ERC-7710',body:"ERC-7710 = standard pour permissions déléguées sur EVM. $CLICK = premier token majeur à l'implémenter.",tag:'draft',date:'14 mars'},
+  ];
+  if (!S.drafts.length) S.drafts=[
+    {id:1,type:'tweet',text:"🚨 Base atteint 1M de transactions quotidiennes pour la première fois.",full:"🚨 Base atteint 1M de transactions quotidiennes pour la première fois. Ce n'est plus une L2 parmi d'autres.",date:'15 mars'},
+    {id:2,type:'thread',text:'🧵 Tout ce que tu dois savoir sur les AI agents on-chain...',full:"1/ AI agents on-chain\n---\n2/ Ils signent des transactions de manière autonome\n---\n3/ ERC-7710 change tout",date:'13 mars'},
+  ];
   persist();
 }
 
-function saveApiKey(v) { try { localStorage.setItem('xcabin_key', v); } catch(e){} }
+function saveApiKey(v) { try{localStorage.setItem('xcabin_key',v);}catch(e){} }
 
 // ═══════════════════════════════════════
 //  TOAST
 // ═══════════════════════════════════════
-function toast(msg, type = 'inf') {
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  const icon = type === 'ok' ? '✓' : type === 'err' ? '⚠' : '·';
-  el.textContent = `${icon} ${msg}`;
-  const wrap = document.getElementById('toasts');
-  wrap.appendChild(el);
-  setTimeout(() => el.remove(), 2800);
+function toast(msg,type='inf') {
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.textContent=`${type==='ok'?'✓':type==='err'?'⚠':'·'} ${msg}`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),2800);
 }
 
 // ═══════════════════════════════════════
 //  UTILS
 // ═══════════════════════════════════════
 function fmtDate() {
-  return new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+  const locales={fr:'fr-FR',en:'en-US',es:'es-ES'};
+  return new Date().toLocaleDateString(locales[S.lang]||'fr-FR',{day:'2-digit',month:'short'});
 }
 
 init();
