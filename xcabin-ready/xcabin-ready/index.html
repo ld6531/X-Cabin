@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>X Cabin</title>
+
+<!-- ── Favicon & Icons ── -->
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/icon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+<!-- ── PWA ── -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#09090c">
+<meta name="apple-mobile-web-app-title" content="X Cabin">
+
+<!-- ── SEO / Social ── -->
+<meta name="description" content="Votre atelier de création de contenu X — tweets, threads, notes et brouillons.">
+<meta property="og:title" content="X Cabin">
+<meta property="og:description" content="Compositeur de tweets professionnel pour créateurs X.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:        #09090c;
+  --ink2:       #111116;
+  --ink3:       #18181f;
+  --ink4:       #222230;
+  --ink5:       #2e2e3e;
+  --border:     rgba(255,255,255,0.07);
+  --border2:    rgba(255,255,255,0.12);
+  --border3:    rgba(255,255,255,0.18);
+  --fog:        #8888a4;
+  --mist:       #50506a;
+  --snow:       #f0f0f8;
+  --gold:       #c9a84c;
+  --gold2:      #e2c270;
+  --gold3:      #f0d898;
+  --gold-dim:   rgba(201,168,76,0.10);
+  --gold-dim2:  rgba(201,168,76,0.18);
+  --gold-glow:  rgba(201,168,76,0.25);
+  --red:        #e05555;
+  --green:      #4caf82;
+  --blue:       #5b8de8;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'Figtree', system-ui, sans-serif;
+  --r-xs:       6px;
+  --r-sm:       10px;
+  --r-md:       14px;
+  --r-lg:       20px;
+  --r-xl:       26px;
+  --r-pill:     100px;
+  --nav-h:      72px;
+  --safe-b:     env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  height: 100%;
+  min-height: 100dvh;
+  background: var(--ink);
+  color: var(--snow);
+  font-family: var(--sans);
+  font-size: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ══════════════════════════════════
+   GRAIN TEXTURE OVERLAY
+══════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  pointer-events: none; z-index: 9999; opacity: 0.6;
+}
+
+/* ══════════════════════════════════
+   SCREEN LAYOUT
+══════════════════════════════════ */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ══════════════════════════════════
+   TOP BAR
+══════════════════════════════════ */
+.topbar {
+  flex-shrink: 0;
+  height: 60px;
+  background: rgba(9,9,12,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 12px;
+  position: relative;
+  z-index: 100;
+}
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+}
+
+.topbar-wordmark {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--snow);
+  line-height: 1;
+}
+
+.topbar-wordmark span {
+  color: var(--gold2);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--r-sm);
+  border: none;
+  background: transparent;
+  color: var(--fog);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 17px;
+  transition: color 0.15s, background 0.15s;
+}
+.icon-btn:hover, .icon-btn:active { color: var(--snow); background: var(--ink3); }
+
+/* ══════════════════════════════════
+   PANELS
+══════════════════════════════════ */
+.panels {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.panel.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════
+   BOTTOM NAV
+══════════════════════════════════ */
+.bottom-nav {
+  flex-shrink: 0;
+  height: calc(var(--nav-h) + var(--safe-b));
+  padding-bottom: var(--safe-b);
+  background: rgba(9,9,12,0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  color: var(--mist);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+  font-family: var(--sans);
+  position: relative;
+}
+
+.nav-item.active { color: var(--gold2); }
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 1.5px;
+  background: var(--gold);
+  border-radius: 0 0 2px 2px;
+  transition: width 0.25s cubic-bezier(0.34,1.4,0.64,1);
+}
+.nav-item.active::before { width: 28px; }
+
+.nav-icon {
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════
+   SCROLLABLE BODY
+══════════════════════════════════ */
+.scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ink5); border-radius: 2px; }
+
+/* ══════════════════════════════════
+   SECTION HEADER
+══════════════════════════════════ */
+.section-head {
+  padding: 20px 18px 12px;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--snow);
+  line-height: 1.1;
+}
+
+.section-title em {
+  color: var(--gold2);
+  font-style: italic;
+}
+
+.section-sub {
+  font-size: 12px;
+  color: var(--fog);
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+
+/* ══════════════════════════════════
+   STYLE PILLS
+══════════════════════════════════ */
+.style-scroll {
+  display: flex;
+  gap: 7px;
+  padding: 0 18px 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.style-scroll::-webkit-scrollbar { display: none; }
+
+.style-pill {
+  flex-shrink: 0;
+  padding: 7px 15px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border2);
+  background: var(--ink3);
+  color: var(--fog);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.style-pill.active {
+  background: var(--gold-dim2);
+  border-color: var(--gold);
+  color: var(--gold2);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+/* ══════════════════════════════════
+   COMPOSE AREA
+══════════════════════════════════ */
+.compose-card {
+  margin: 0 14px 14px;
+  background: var(--ink2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+
+.compose-inner {
+  padding: 16px;
+}
+
+.compose-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.compose-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #8a6820);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.compose-meta { flex: 1; }
+.compose-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--snow);
+  line-height: 1;
+}
+.compose-handle {
+  font-size: 11px;
+  color: var(--fog);
+  margin-top: 2px;
+}
+
+.char-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--fog);
+}
+
+#compose-textarea {
+  width: 100%;
+  min-height: 120px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--snow);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  resize: none;
+  caret-color: var(--gold);
+}
+#compose-textarea::placeholder { color: var(--mist); }
+
+/* Char ring */
+.ring-svg circle.track { fill: none; stroke: var(--ink4); stroke-width: 2.5; }
+.ring-svg circle.fill  { fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-linecap: round; transition: stroke-dashoffset 0.2s, stroke 0.2s; }
+
+.compose-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 16px;
+}
+
+.compose-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  gap: 4px;
+}
+
+.toolbar-btn {
+  width: 34px; height: 34px;
+  border-radius: var(--r-sm);
+  border: none;
+  background: transparent;
+  color: var(--fog);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.15s, background 0.15s;
+}
+.toolbar-btn:hover, .toolbar-btn:active { color: var(--gold2); background: var(--gold-dim); }
+
+.compose-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 14px;
+}
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  border: none; border-radius: var(--r-pill);
+  font-family: var(--sans); font-weight: 600; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+
+.btn-sm { padding: 9px 16px; font-size: 13px; }
+.btn-md { padding: 11px 20px; font-size: 14px; }
+
+.btn-ghost {
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+  color: var(--fog);
+}
+.btn-ghost:active { background: var(--ink4); }
+
+.btn-gold {
+  background: linear-gradient(135deg, #b8923e, var(--gold2));
+  color: var(--ink);
+  box-shadow: 0 2px 14px rgba(201,168,76,0.28);
+  flex: 1;
+}
+.btn-gold:active {
+  box-shadow: 0 1px 6px rgba(201,168,76,0.2);
+  transform: scale(0.98);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold2);
+}
+.btn-outline-gold:active { background: var(--gold-dim); }
+
+/* ══════════════════════════════════
+   AI SUGGESTION BLOCK
+══════════════════════════════════ */
+
+
+.ai-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-label::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px var(--gold);
+  display: inline-block;
+}
+
+.ai-text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--snow);
+  margin-bottom: 12px;
+}
+
+.ai-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ai-dismiss {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: transparent; border: none;
+  color: var(--mist); font-size: 18px; cursor: pointer;
+  line-height: 1;
+}
+
+
+
+.pulse-dots { display: flex; gap: 4px; }
+.pulse-dots span {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--gold);
+  animation: pdot 1.3s ease-in-out infinite;
+}
+.pulse-dots span:nth-child(2) { animation-delay: 0.18s; }
+.pulse-dots span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes pdot {
+  0%,80%,100% { transform: scale(0.75); opacity: 0.35; }
+  40% { transform: scale(1.15); opacity: 1; }
+}
+
+/* ══════════════════════════════════
+   MEDIA STRIP
+══════════════════════════════════ */
+.media-strip {
+  margin: 0 14px 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.media-thumb {
+  width: 70px; height: 70px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  position: relative;
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+}
+.media-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.media-remove {
+  position: absolute; top: 4px; right: 4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(0,0,0,0.75); border: none;
+  color: white; font-size: 11px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.media-add {
+  width: 70px; height: 70px;
+  border-radius: var(--r-md);
+  border: 1.5px dashed var(--border3);
+  background: transparent;
+  color: var(--fog);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+}
+.media-add:active { border-color: var(--gold); color: var(--gold); }
+
+/* ══════════════════════════════════
+   STYLE TIP CARD
+══════════════════════════════════ */
+.tip-card-unused {
+  margin: 0 14px 14px;
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  border-left: 2px solid var(--gold);
+}
+.tip-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--gold); margin-bottom: 5px;
+}
+.tip-text { font-size: 13px; color: var(--fog); line-height: 1.6; }
+
+/* ══════════════════════════════════
+   PREVIEW CARD (X-style)
+══════════════════════════════════ */
+.preview-wrap {
+  margin: 0 14px 14px;
+}
+
+.preview-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--mist); margin-bottom: 10px;
+  padding: 0 2px;
+}
+
+.x-card {
+  background: #000;
+  border: 1px solid #2f3336;
+  border-radius: 16px;
+  padding: 16px;
+  font-family: -apple-system, 'Helvetica Neue', sans-serif;
+}
+
+.x-card-header {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.x-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #6b4e18);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 16px; color: #000;
+  flex-shrink: 0;
+  font-family: var(--serif);
+}
+
+.x-name { font-size: 14px; font-weight: 700; color: #e7e9ea; }
+.x-handle { font-size: 13px; color: #71767b; }
+
+.x-text {
+  font-size: 15px; line-height: 1.5; color: #e7e9ea;
+  white-space: pre-wrap; word-break: break-word;
+}
+
+.x-text.empty { color: #555; font-style: italic; font-size: 14px; }
+
+.x-media {
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: none;
+}
+.x-media-grid { display: grid; gap: 2px; }
+.x-media-grid.g1 { grid-template-columns: 1fr; }
+.x-media-grid.g2 { grid-template-columns: 1fr 1fr; }
+.x-media-grid.g3 { grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; }
+.x-media-grid.g4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.x-media-grid.g3 > :first-child { grid-row: span 2; }
+
+.x-media-item {
+  min-height: 100px;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+.x-media-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.x-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #2f3336;
+}
+.x-act { font-size: 13px; color: #71767b; display: flex; gap: 4px; align-items: center; }
+
+/* ══════════════════════════════════
+   THREAD MODE
+══════════════════════════════════ */
+.thread-container {
+  padding: 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.thread-tweet {
+  display: flex;
+  gap: 10px;
+  position: relative;
+}
+
+.thread-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 36px;
+}
+
+.thread-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #6b4e18);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 15px; font-weight: 600;
+  color: var(--ink); flex-shrink: 0;
+}
+
+.thread-line {
+  width: 2px;
+  flex: 1;
+  background: var(--border2);
+  margin: 6px 0;
+  min-height: 16px;
+}
+
+.thread-body { flex: 1; padding-bottom: 14px; }
+
+.thread-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.thread-name { font-size: 13px; font-weight: 600; }
+.thread-handle { font-size: 12px; color: var(--fog); }
+.thread-num {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--mist);
+  background: var(--ink3);
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+}
+
+.thread-input {
+  width: 100%;
+  background: var(--ink2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  color: var(--snow);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  min-height: 72px;
+  caret-color: var(--gold);
+  transition: border-color 0.15s;
+}
+.thread-input:focus { border-color: rgba(201,168,76,0.35); }
+.thread-input::placeholder { color: var(--mist); }
+
+.thread-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+.thread-count { font-size: 11px; color: var(--mist); }
+.thread-del {
+  background: transparent; border: none;
+  color: var(--mist); font-size: 14px; cursor: pointer; padding: 2px 6px;
+  transition: color 0.15s;
+}
+.thread-del:active { color: var(--red); }
+
+.thread-add-btn {
+  margin: 0 14px 14px;
+  width: calc(100% - 28px);
+  padding: 11px;
+  background: var(--ink3);
+  border: 1px dashed var(--border3);
+  border-radius: var(--r-lg);
+  color: var(--fog);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.thread-add-btn:active { border-color: var(--gold); color: var(--gold2); }
+
+/* ══════════════════════════════════
+   NOTES PANEL
+══════════════════════════════════ */
+.notes-search-bar {
+  padding: 0 14px 12px;
+}
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-pill);
+  padding: 9px 14px;
+}
+.search-input-wrap input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--snow); font-family: var(--sans); font-size: 14px;
+  caret-color: var(--gold);
+}
+.search-input-wrap input::placeholder { color: var(--mist); }
+
+.notes-list { padding: 0 14px; display: flex; flex-direction: column; gap: 8px; }
+
+.note-card {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.note-card:active { transform: scale(0.99); }
+.note-card.selected { border-color: rgba(201,168,76,0.35); }
+
+.note-card::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+.note-card.tag-idea::after { background: var(--blue); }
+.note-card.tag-draft::after { background: var(--gold); }
+.note-card.tag-ready::after { background: var(--green); }
+.note-card.tag-thread::after { background: #d97ae8; }
+
+.note-card-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--snow);
+  margin-bottom: 5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.note-card-preview {
+  font-size: 12px; color: var(--fog); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 10px;
+}
+.note-card-foot { display: flex; align-items: center; gap: 8px; }
+
+.tag-badge {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; padding: 2px 8px; border-radius: var(--r-pill);
+}
+.tag-badge.idea  { background: rgba(91,141,232,0.15); color: #7aaeff; }
+.tag-badge.draft { background: rgba(201,168,76,0.15); color: var(--gold2); }
+.tag-badge.ready { background: rgba(76,175,130,0.15); color: #6fd4a2; }
+.tag-badge.thread { background: rgba(217,122,232,0.15); color: #e89bf0; }
+
+.note-date { font-size: 11px; color: var(--mist); margin-left: auto; }
+
+/* Note editor sheet */
+.note-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.note-sheet.open { transform: translateY(0); }
+
+.note-sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(9,9,12,0.95);
+  flex-shrink: 0;
+}
+.note-sheet-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--ink3);
+  border: none; color: var(--fog); font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+}
+.note-title-input {
+  flex: 1;
+  background: transparent; border: none; outline: none;
+  font-family: var(--serif); font-size: 20px; font-weight: 500;
+  color: var(--snow); caret-color: var(--gold);
+}
+.note-title-input::placeholder { color: var(--mist); }
+
+.note-tag-row {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.note-tag-row::-webkit-scrollbar { display: none; }
+
+.ntag-btn {
+  flex-shrink: 0;
+  padding: 5px 12px; border-radius: var(--r-pill);
+  border: 1px solid var(--border2); background: transparent;
+  font-family: var(--sans); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--mist); cursor: pointer; transition: all 0.15s;
+}
+.ntag-btn.active-idea   { background: rgba(91,141,232,0.18); border-color: #5b8de8; color: #7aaeff; }
+.ntag-btn.active-draft  { background: var(--gold-dim2); border-color: var(--gold); color: var(--gold2); }
+.ntag-btn.active-ready  { background: rgba(76,175,130,0.18); border-color: #4caf82; color: #6fd4a2; }
+.ntag-btn.active-thread { background: rgba(217,122,232,0.15); border-color: #d97ae8; color: #e89bf0; }
+
+.note-body-input {
+  flex: 1;
+  background: transparent; border: none; outline: none;
+  color: var(--snow); font-family: var(--sans); font-size: 15px;
+  line-height: 1.75; padding: 18px 16px;
+  resize: none; caret-color: var(--gold);
+}
+.note-body-input::placeholder { color: var(--mist); }
+
+.note-sheet-foot {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+  padding-bottom: calc(12px + var(--safe-b));
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════
+   DRAFTS PANEL
+══════════════════════════════════ */
+.drafts-filters {
+  display: flex;
+  gap: 6px;
+  padding: 0 14px 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.drafts-filters::-webkit-scrollbar { display: none; }
+
+.filter-pill {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border2);
+  background: var(--ink3);
+  color: var(--fog);
+  font-family: var(--sans); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.filter-pill.active {
+  background: var(--gold-dim2);
+  border-color: var(--gold);
+  color: var(--gold2);
+}
+
+.drafts-list { padding: 0 14px; display: flex; flex-direction: column; gap: 10px; }
+
+.draft-card {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.draft-card:active { transform: scale(0.99); }
+
+.draft-card-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.draft-card.dt-tweet .draft-card-bar { background: var(--gold); }
+.draft-card.dt-thread .draft-card-bar { background: #d97ae8; }
+.draft-card.dt-idea .draft-card-bar { background: var(--blue); }
+
+.draft-type-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--mist); margin-bottom: 8px; margin-top: 4px;
+}
+.dt-tweet .draft-type-label { color: var(--gold); }
+.dt-thread .draft-type-label { color: #d97ae8; }
+.dt-idea .draft-type-label { color: var(--blue); }
+
+.draft-text {
+  font-size: 14px; line-height: 1.6; color: var(--fog);
+  display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.draft-foot {
+  display: flex; align-items: center; gap: 8px;
+}
+
+.draft-date { font-size: 11px; color: var(--mist); }
+
+.draft-actions {
+  margin-left: auto;
+  display: flex; gap: 4px;
+}
+.draft-act {
+  width: 28px; height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--ink3); border: none;
+  color: var(--fog); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s;
+}
+.draft-act:active { background: var(--gold-dim2); color: var(--gold2); }
+.draft-act.del:active { background: rgba(224,85,85,0.15); color: var(--red); }
+
+/* ══════════════════════════════════
+   SETTINGS PANEL
+══════════════════════════════════ */
+.settings-list { padding: 0 14px; display: flex; flex-direction: column; gap: 10px; }
+
+.settings-group {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+
+.settings-group-label {
+  padding: 12px 16px 6px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--mist);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border-top: 1px solid var(--border);
+}
+.settings-row:first-of-type { border-top: none; }
+
+.s-icon { font-size: 18px; flex-shrink: 0; width: 28px; text-align: center; }
+.s-info { flex: 1; }
+.s-label { font-size: 14px; font-weight: 500; color: var(--snow); }
+.s-desc  { font-size: 12px; color: var(--fog); margin-top: 2px; }
+
+.toggle-track {
+  width: 44px; height: 26px;
+  border-radius: var(--r-pill);
+  background: var(--ink4);
+  border: none; cursor: pointer;
+  position: relative; flex-shrink: 0;
+  transition: background 0.2s;
+}
+.toggle-track.on { background: var(--gold); }
+.toggle-track::after {
+  content: '';
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: white; transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle-track.on::after { transform: translateX(18px); }
+
+.s-input {
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  color: var(--snow); padding: 7px 10px;
+  font-family: var(--sans); font-size: 13px; outline: none;
+  width: 150px;
+  caret-color: var(--gold);
+  transition: border-color 0.15s;
+}
+.s-input:focus { border-color: var(--gold); }
+
+/* ══════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════ */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60px 30px; gap: 10px; text-align: center;
+}
+.empty-icon { font-size: 44px; opacity: 0.25; margin-bottom: 4px; }
+.empty-title { font-family: var(--serif); font-size: 22px; font-weight: 400; color: var(--fog); }
+.empty-sub { font-size: 13px; color: var(--mist); max-width: 220px; }
+
+/* ══════════════════════════════════
+   TOAST
+══════════════════════════════════ */
+.toast-wrap {
+  position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
+  z-index: 9000; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+
+.toast {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  font-size: 13px; font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  animation: toastPop 0.25s cubic-bezier(0.34,1.4,0.64,1);
+  white-space: nowrap;
+}
+.toast.ok  { background: #1a2e1f; border: 1px solid rgba(76,175,130,0.4); color: #6fd4a2; }
+.toast.err { background: #2a1414; border: 1px solid rgba(224,85,85,0.4); color: #ff8888; }
+.toast.inf { background: var(--ink4); border: 1px solid var(--border2); color: var(--fog); }
+
+@keyframes toastPop {
+  from { transform: scale(0.88) translateY(-8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* ══════════════════════════════════
+   MODE TABS
+══════════════════════════════════ */
+.mode-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 14px 14px;
+}
+.mode-tab {
+  flex: 1; padding: 9px;
+  background: var(--ink3); border: 1px solid var(--border2);
+  color: var(--fog); font-family: var(--sans); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.18s;
+}
+.mode-tab:first-child { border-radius: var(--r-pill) 0 0 var(--r-pill); border-right: none; }
+.mode-tab:last-child  { border-radius: 0 var(--r-pill) var(--r-pill) 0; }
+.mode-tab.active {
+  background: var(--gold-dim2);
+  border-color: var(--gold);
+  color: var(--gold2);
+}
+
+/* ══════════════════════════════════
+   NEW NOTE FAB
+══════════════════════════════════ */
+.fab {
+  position: absolute;
+  bottom: calc(var(--nav-h) + var(--safe-b) + 16px);
+  right: 16px;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b8923e, var(--gold2));
+  border: none;
+  color: var(--ink);
+  font-size: 22px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+  z-index: 50;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.fab:active { transform: scale(0.93); box-shadow: 0 2px 10px rgba(201,168,76,0.2); }
+
+/* ══════════════════════════════════
+   LANG SELECTOR
+══════════════════════════════════ */
+.lang-selector {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--ink3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-pill);
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: transparent;
+  color: var(--mist);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.18s;
+  line-height: 1;
+}
+.lang-btn.active { background: var(--gold); color: var(--ink); }
+
+
+
+/* ── Ask Claude button ── */
+.btn-ask-claude {
+  background: linear-gradient(135deg, #c17a3a, #e8a84a);
+  color: #1a0e00;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 16px rgba(232,168,74,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.btn-ask-claude::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  pointer-events: none;
+}
+.btn-ask-claude:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 6px rgba(232,168,74,0.2);
+}
+.ask-claude-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--mist);
+  margin-top: 7px;
+  letter-spacing: 0.02em;
+}
+
+/* ══════════════════════════════════
+   STAGGER ANIMATION
+══════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.3s ease both; }
+.fade-up:nth-child(1) { animation-delay: 0.04s; }
+.fade-up:nth-child(2) { animation-delay: 0.08s; }
+.fade-up:nth-child(3) { animation-delay: 0.12s; }
+.fade-up:nth-child(4) { animation-delay: 0.16s; }
+.fade-up:nth-child(5) { animation-delay: 0.20s; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <!-- X Cabin SVG Logo -->
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cabin roof shape -->
+        <path d="M16 3 L29 13 L29 29 L3 29 L3 13 Z" fill="#1a1810" stroke="#c9a84c" stroke-width="1.2" stroke-linejoin="round"/>
+        <!-- Roof peak highlight -->
+        <path d="M16 4.5 L27.5 13.5" stroke="#e2c270" stroke-width="0.7" stroke-linecap="round" opacity="0.5"/>
+        <!-- Door -->
+        <rect x="12" y="19" width="8" height="10" rx="1" fill="#0d0d10" stroke="#c9a84c" stroke-width="0.8"/>
+        <!-- Door knob -->
+        <circle cx="19" cy="24.5" r="0.8" fill="#c9a84c"/>
+        <!-- Window left -->
+        <rect x="5" y="16" width="5" height="5" rx="0.8" fill="#0d0d10" stroke="#c9a84c" stroke-width="0.8"/>
+        <!-- Window right -->
+        <rect x="22" y="16" width="5" height="5" rx="0.8" fill="#0d0d10" stroke="#c9a84c" stroke-width="0.8"/>
+        <!-- Window cross (left) -->
+        <line x1="7.5" y1="16" x2="7.5" y2="21" stroke="#c9a84c" stroke-width="0.5" opacity="0.6"/>
+        <line x1="5" y1="18.5" x2="10" y2="18.5" stroke="#c9a84c" stroke-width="0.5" opacity="0.6"/>
+        <!-- Window cross (right) -->
+        <line x1="24.5" y1="16" x2="24.5" y2="21" stroke="#c9a84c" stroke-width="0.5" opacity="0.6"/>
+        <line x1="22" y1="18.5" x2="27" y2="18.5" stroke="#c9a84c" stroke-width="0.5" opacity="0.6"/>
+        <!-- Chimney -->
+        <rect x="21" y="6" width="3.5" height="7" rx="0.5" fill="#1a1810" stroke="#c9a84c" stroke-width="0.8"/>
+        <!-- Smoke dots -->
+        <circle cx="22" cy="4.5" r="0.9" fill="#c9a84c" opacity="0.4"/>
+        <circle cx="23.5" cy="3" r="0.65" fill="#c9a84c" opacity="0.25"/>
+        <!-- X mark on door (subtle branding) -->
+        <line x1="13.5" y1="20.5" x2="16" y2="23.5" stroke="#c9a84c" stroke-width="0.6" opacity="0.5"/>
+        <line x1="16" y1="20.5" x2="13.5" y2="23.5" stroke="#c9a84c" stroke-width="0.6" opacity="0.5"/>
+      </svg>
+      <span class="topbar-wordmark">X <span>Cabin</span></span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-selector">
+        <button class="lang-btn active" onclick="setLang('fr',this)">FR</button>
+        <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+        <button class="lang-btn" onclick="setLang('es',this)">ES</button>
+      </div>
+      <button class="icon-btn" onclick="saveDraft()" id="btn-save">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 3.5A1.5 1.5 0 014.5 2h7.086a1.5 1.5 0 011.06.44l2.415 2.414A1.5 1.5 0 0115.5 5.914V14.5A1.5 1.5 0 0114 16H4.5A1.5 1.5 0 013 14.5v-11z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><rect x="6" y="2" width="6" height="4" rx="0.5" stroke="currentColor" stroke-width="1.1"/><rect x="5" y="10" width="8" height="6" rx="0.5" stroke="currentColor" stroke-width="1.1"/></svg>
+      </button>
+      <button class="icon-btn" onclick="copyToClipboard()" id="btn-copy">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="6.5" y="6.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M11.5 6.5V4.5A1.5 1.5 0 0010 3H4.5A1.5 1.5 0 003 4.5V10A1.5 1.5 0 004.5 11.5h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- PANELS -->
+  <div class="panels">
+
+    <!-- ═══ COMPOSE PANEL ═══ -->
+    <div id="p-compose" class="panel active scroll-body">
+
+      <div class="section-head fade-up">
+        <div class="section-title" data-i18n="compose_title">Composez <em>avec intention</em></div>
+        <div class="section-sub" data-i18n="compose_sub">Votre voix, votre style, votre audience.</div>
+      </div>
+
+      <!-- Style pills -->
+      <div class="style-scroll fade-up">
+        <button class="style-pill active" onclick="selectStyle(this,'default')" data-i18n="style_default">Neutre</button>
+        <button class="style-pill" onclick="selectStyle(this,'alpha')">Alpha</button>
+        <button class="style-pill" onclick="selectStyle(this,'defi')">DeFi</button>
+        <button class="style-pill" onclick="selectStyle(this,'viral')" data-i18n="style_viral">Viral</button>
+        <button class="style-pill" onclick="selectStyle(this,'hook')">Hook</button>
+        <button class="style-pill" onclick="selectStyle(this,'insight')">Insight</button>
+        <button class="style-pill" onclick="selectStyle(this,'thread')">Thread</button>
+      </div>
+
+      <!-- Mode tabs -->
+      <div class="mode-tabs fade-up">
+        <button class="mode-tab active" onclick="setMode('tweet',this)" data-i18n="tab_tweet">Tweet</button>
+        <button class="mode-tab" onclick="setMode('thread',this)">Thread</button>
+        <button class="mode-tab" onclick="setMode('preview',this)" data-i18n="tab_preview">Aperçu</button>
+      </div>
+
+      <!-- TWEET MODE -->
+      <div id="mode-tweet">
+        <div class="compose-card fade-up">
+          <div class="compose-inner">
+            <div class="compose-header">
+              <div class="compose-avatar" id="av-letter">G</div>
+              <div class="compose-meta">
+                <div class="compose-name" id="av-name">John Doe</div>
+                <div class="compose-handle" id="av-handle">@johndoe</div>
+              </div>
+              <div class="char-indicator">
+                <svg class="ring-svg" width="28" height="28" viewBox="0 0 28 28">
+                  <circle class="track" cx="14" cy="14" r="11"/>
+                  <circle id="ring" class="fill" cx="14" cy="14" r="11"
+                    stroke-dasharray="69.1" stroke-dashoffset="69.1"
+                    transform="rotate(-90 14 14)"/>
+                </svg>
+                <span id="char-num" style="font-size:12px;color:var(--fog)">0</span>
+              </div>
+            </div>
+            <textarea id="compose-textarea"
+              placeholder="Qu'est-ce qui se passe sur Base aujourd'hui ?"
+              data-i18n-ph="compose_placeholder"
+              oninput="onTextInput()"></textarea>
+          </div>
+
+          <div class="compose-divider"></div>
+
+          <div class="compose-toolbar">
+            <button class="toolbar-btn" onclick="triggerMedia()" title="Ajouter médias">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3.5" width="14" height="11" rx="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="7" r="1.2" fill="currentColor"/><path d="M2 12l4-4 3 3 2-2 5 5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="toolbar-btn" onclick="insertEmoji('🚨')" title="#">🚨</button>
+            <button class="toolbar-btn" onclick="insertEmoji('🧵')" title="#">🧵</button>
+            <button class="toolbar-btn" onclick="insertEmoji('⚡')" title="#">⚡</button>
+            <button class="toolbar-btn" onclick="insertEmoji('📊')" title="#">📊</button>
+          </div>
+        </div>
+
+        <!-- Media strip -->
+        <div id="media-strip" class="media-strip fade-up"></div>
+          <div id="tip-text" class="tip-text" data-i18n="tip_default">Sélectionnez un style pour voir les conseils de rédaction.</div>
+        </div>
+
+        <!-- Ask Claude button -->
+        <div style="padding:0 14px 14px" class="fade-up">
+          <button class="btn btn-md btn-ask-claude" style="width:100%" onclick="askClaude()">
+            <!-- Claude logomark -->
+            <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.43 8.4C21.11 5.46 18.72 4 16 4c-2.72 0-5.11 1.46-6.43 4.4L4 20h4.8l1.6-4h11.2l1.6 4H28L22.43 8.4zM11.6 13l2.2-5.5a2.4 2.4 0 014.4 0L20.4 13H11.6z" fill="currentColor"/>
+            </svg>
+            <span data-i18n="ai_btn">Demander à Claude</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="opacity:0.6"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="ask-claude-hint" data-i18n="ai_hint">Ouvre Claude.ai avec votre prompt prêt à l'emploi</div>
+        </div>
+      </div>
+
+      <!-- THREAD MODE -->
+      <div id="mode-thread" style="display:none">
+        <div class="thread-container" id="thread-container"></div>
+        <button class="thread-add-btn" onclick="addThread()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span data-i18n="thread_add">Ajouter un tweet</span>
+        </button>
+      </div>
+
+      <!-- PREVIEW MODE -->
+      <div id="mode-preview" style="display:none">
+        <div class="preview-wrap">
+          <div class="preview-label" data-i18n="preview_label">Aperçu X</div>
+          <div class="x-card">
+            <div class="x-card-header">
+              <div class="x-avatar" id="xav-letter">G</div>
+              <div>
+                <div class="x-name" id="xav-name">John Doe</div>
+                <div class="x-handle" id="xav-handle">@johndoe</div>
+              </div>
+            </div>
+            <div id="x-text" class="x-text empty" data-i18n="preview_empty">Composez un tweet pour voir l'aperçu...</div>
+            <div id="x-media" class="x-media"></div>
+            <div class="x-actions">
+              <span class="x-act">💬 0</span>
+              <span class="x-act">🔁 0</span>
+              <span class="x-act">❤️ 0</span>
+              <span class="x-act">📈 0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <input type="file" id="file-in" accept="image/*,video/*" multiple style="display:none" onchange="handleFiles(this.files)">
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- ═══ NOTES PANEL ═══ -->
+    <div id="p-notes" class="panel scroll-body">
+      <div class="section-head">
+        <div class="section-title" data-i18n="notes_title">Mes <em>notes</em></div>
+        <div class="section-sub" data-i18n="notes_sub">Idées, recherches, brouillons en attente.</div>
+      </div>
+
+      <div class="notes-search-bar">
+        <div class="search-input-wrap">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#50506a" stroke-width="1.3"/><path d="M10 10l3.5 3.5" stroke="#50506a" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <input id="notes-search" data-i18n-ph="notes_search" placeholder="Rechercher dans les notes..." oninput="filterNotes(this.value)">
+        </div>
+      </div>
+
+      <div id="notes-list" class="notes-list"></div>
+      <div style="height:20px"></div>
+
+      <!-- Note editor sheet -->
+      <div id="note-sheet" class="note-sheet">
+        <div class="note-sheet-head">
+          <button class="note-sheet-close" onclick="closeNoteSheet()">‹</button>
+          <input class="note-title-input" id="note-title" data-i18n-ph="note_title_ph" placeholder="Titre..." oninput="saveNote()">
+          <button class="btn btn-sm btn-gold" onclick="sendNoteToCompose()" data-i18n="note_to_compose">→ Composer</button>
+        </div>
+        <div class="note-tag-row">
+          <button class="ntag-btn" onclick="setNoteTag('idea',this)" data-i18n="tag_idea">Idée</button>
+          <button class="ntag-btn" onclick="setNoteTag('draft',this)" data-i18n="tag_draft">Brouillon</button>
+          <button class="ntag-btn" onclick="setNoteTag('ready',this)" data-i18n="tag_ready">Prêt</button>
+          <button class="ntag-btn" onclick="setNoteTag('thread',this)">Thread</button>
+        </div>
+        <textarea class="note-body-input" id="note-body" data-i18n-ph="note_body_ph" placeholder="Écris ici..." oninput="saveNote()"></textarea>
+        <div class="note-sheet-foot">
+          <button class="btn btn-md btn-ghost" onclick="deleteNote()" style="flex:1" data-i18n="note_delete">Supprimer</button>
+          <button class="btn btn-md btn-gold" onclick="closeNoteSheet()" style="flex:1" data-i18n="note_close">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DRAFTS PANEL ═══ -->
+    <div id="p-drafts" class="panel scroll-body">
+      <div class="section-head">
+        <div class="section-title" data-i18n="drafts_title">Brouillons <em>sauvegardés</em></div>
+        <div class="section-sub" id="drafts-count">0 brouillon</div>
+      </div>
+
+      <div class="drafts-filters">
+        <button class="filter-pill active" onclick="filterDrafts('all',this)" data-i18n="filter_all">Tous</button>
+        <button class="filter-pill" onclick="filterDrafts('tweet',this)">Tweets</button>
+        <button class="filter-pill" onclick="filterDrafts('thread',this)">Threads</button>
+        <button class="filter-pill" onclick="filterDrafts('idea',this)" data-i18n="filter_ideas">Idées</button>
+      </div>
+
+      <div id="drafts-list" class="drafts-list"></div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- ═══ SETTINGS PANEL ═══ -->
+    <div id="p-settings" class="panel scroll-body">
+      <div class="section-head">
+        <div class="section-title" data-i18n="settings_title">Paramètres</div>
+        <div class="section-sub" data-i18n="settings_sub">Profil, composition.</div>
+      </div>
+
+      <div class="settings-list">
+        <div class="settings-group">
+          <div class="settings-group-label" data-i18n="s_profile">Profil X</div>
+          <div class="settings-row">
+            <span class="s-icon">👤</span>
+            <div class="s-info"><div class="s-label" data-i18n="s_name">Nom</div></div>
+            <input class="s-input" id="s-name" value="John Doe" oninput="updateProfile()">
+          </div>
+          <div class="settings-row">
+            <span class="s-icon" style="font-size:14px;color:var(--fog)">@</span>
+            <div class="s-info"><div class="s-label">Handle</div></div>
+            <input class="s-input" id="s-handle" value="@johndoe" oninput="updateProfile()">
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-label" data-i18n="s_compose">Composition</div>
+          <div class="settings-row">
+            <span class="s-icon">🔢</span>
+            <div class="s-info">
+              <div class="s-label" data-i18n="s_number">Numéroter les threads</div>
+              <div class="s-desc">1/, 2/, 3/...</div>
+            </div>
+            <button class="toggle-track on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="settings-row">
+            <span class="s-icon">💾</span>
+            <div class="s-info">
+              <div class="s-label" data-i18n="s_autosave">Auto-sauvegarde</div>
+              <div class="s-desc" data-i18n="s_autosave_desc">Toutes les 30 secondes</div>
+            </div>
+            <button class="toggle-track on" onclick="this.classList.toggle('on')"></button>
+          </div>
+        </div>
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 6px var(--green)"></div>
+          </div>
+        </div>
+            <div class="api-step">
+              <div class="api-step-num">2</div>
+              <div class="api-step-text" data-i18n="guide_step2">
+                Appuyez sur <strong>"Demander à Claude"</strong>. X Cabin construit automatiquement un prompt optimisé selon votre style.
+              </div>
+            </div>
+            <div class="api-step">
+              <div class="api-step-num">3</div>
+              <div class="api-step-text" data-i18n="guide_step3">
+                <strong>Claude.ai s'ouvre</strong> dans un nouvel onglet avec le prompt pré-rempli. Claude répond instantanément.
+              </div>
+            </div>
+            <div class="api-step">
+              <div class="api-step-num">4</div>
+              <div class="api-step-text" data-i18n="guide_step4">
+                <strong>Copiez</strong> la réponse de Claude, revenez dans X Cabin et collez-la dans le Compositeur.
+              </div>
+            </div>
+            <div class="api-ok" data-i18n="guide_ok">
+              ✓ Gratuit, sans configuration, sans clé API. Requiert uniquement un compte Claude.ai (gratuit).
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-label" data-i18n="s_about">À propos</div>
+          <div class="settings-row">
+            <span class="s-icon">🏕️</span>
+            <div class="s-info">
+              <div class="s-label">X Cabin</div>
+              <div class="s-desc">Version 1.1 · Made for creators</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="height:30px"></div>
+    </div>
+  </div>
+
+  <!-- FAB for notes -->
+  <button id="notes-fab" class="fab" style="display:none" onclick="createNote()">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3v16M3 11h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="showPanel('compose',this)" id="nav-compose">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17.5l3.5-1 10-10a1.414 1.414 0 000-2L16 3a1.414 1.414 0 00-2 0l-10 10L2.5 17l1.5.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M14 5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nav_compose">Composer</span>
+    </button>
+    <button class="nav-item" onclick="showPanel('notes',this)" id="nav-notes">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h14v14H4z" rx="1.5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 8h6M8 11h6M8 14h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nav_notes">Notes</span>
+    </button>
+    <button class="nav-item" onclick="showPanel('drafts',this)" id="nav-drafts">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 3h12a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7h6M8 11h6M8 15h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nav_drafts">Brouillons</span>
+    </button>
+    <button class="nav-item" onclick="showPanel('settings',this)" id="nav-settings">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M11 2v2M11 18v2M2 11h2M18 11h2M4.93 4.93l1.41 1.41M15.66 15.66l1.41 1.41M4.93 17.07l1.41-1.41M15.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nav_settings">Réglages</span>
+    </button>
+  </nav>
+</div>
+
+<!-- Toast container -->
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+// ═══════════════════════════════════════
+//  i18n TRANSLATIONS
+// ═══════════════════════════════════════
+const TRANSLATIONS = {
+  fr: {
+    compose_title:'Composez <em>avec intention</em>', compose_sub:'Votre voix, votre style, votre audience.',
+    style_default:'Neutre', style_viral:'Viral',
+    tab_tweet:'Tweet', tab_preview:'Aperçu',
+    compose_placeholder:"Qu'est-ce qui se passe sur Base aujourd'hui ?",
+    thread_add:'Ajouter un tweet', thread_del:'Supprimer',
+    preview_label:'Aperçu X', preview_empty:"Composez un tweet pour voir l'aperçu...",
+    notes_title:'Mes <em>notes</em>', notes_sub:'Idées, recherches, brouillons en attente.',
+    notes_search:'Rechercher dans les notes...', note_title_ph:'Titre...', note_body_ph:'Écris ici...',
+    note_to_compose:'→ Composer', note_delete:'Supprimer', note_close:'Fermer',
+    tag_idea:'Idée', tag_draft:'Brouillon', tag_ready:'Prêt',
+    drafts_title:'Brouillons <em>sauvegardés</em>', filter_all:'Tous', filter_ideas:'Idées',
+    drafts_count_one:'brouillon', drafts_count_many:'brouillons',
+    type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
+    empty_notes_title:'Aucune note', empty_notes_sub:'Appuyez sur + pour créer votre première note.',
+    empty_drafts_title:'Aucun brouillon', empty_drafts_sub:'Sauvegardez un tweet depuis le Composer.',
+    settings_title:'Paramètres', settings_sub:'Profil, composition.',
+    s_profile:'Profil X', s_name:'Nom', s_compose:'Composition',
+    s_number:'Numéroter les threads', s_autosave:'Auto-sauvegarde', s_autosave_desc:'Toutes les 30 secondes',
+ s_about:'À propos',
+est affichée qu'une seule fois.',
+    nav_compose:'Composer', nav_notes:'Notes', nav_drafts:'Brouillons', nav_settings:'Réglages',
+ t_max_media:'Maximum 4 médias par tweet',
+    t_copied:'Copié dans le presse-papiers', t_nothing_copy:'Rien à copier',
+    t_draft_saved:'Brouillon sauvegardé', t_nothing_save:'Rien à sauvegarder',
+    t_draft_loaded:'Brouillon chargé', t_draft_deleted:'Brouillon supprimé',
+    t_note_deleted:'Note supprimée', t_note_loaded:'Note chargée dans Composer', t_note_empty:'Note vide',
+  },
+  en: {
+    compose_title:'Compose <em>with intention</em>', compose_sub:'Your voice, your style, your audience.',
+    style_default:'Neutral', style_viral:'Viral',
+    tab_tweet:'Tweet', tab_preview:'Preview',
+    compose_placeholder:"What's happening on Base today?",
+    thread_add:'Add a tweet', thread_del:'Delete',
+    preview_label:'X Preview', preview_empty:'Write a tweet to see the preview...',
+    notes_title:'My <em>notes</em>', notes_sub:'Ideas, research, pending drafts.',
+    notes_search:'Search notes...', note_title_ph:'Title...', note_body_ph:'Write here...',
+    note_to_compose:'→ Compose', note_delete:'Delete', note_close:'Close',
+    tag_idea:'Idea', tag_draft:'Draft', tag_ready:'Ready',
+    drafts_title:'<em>Saved</em> drafts', filter_all:'All', filter_ideas:'Ideas',
+    drafts_count_one:'draft', drafts_count_many:'drafts',
+    type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
+    empty_notes_title:'No notes yet', empty_notes_sub:'Tap + to create your first note.',
+    empty_drafts_title:'No drafts yet', empty_drafts_sub:'Save a tweet from the Composer.',
+    settings_title:'Settings', settings_sub:'Profile, composition, API.',
+    s_profile:'X Profile', s_name:'Name', s_compose:'Composition',
+    s_number:'Number threads', s_autosave:'Auto-save', s_autosave_desc:'Every 30 seconds',
+ s_about:'About',
+    nav_compose:'Compose', nav_notes:'Notes', nav_drafts:'Drafts', nav_settings:'Settings',
+ t_max_media:'Maximum 4 media per tweet',
+    t_copied:'Copied to clipboard', t_nothing_copy:'Nothing to copy',
+    t_draft_saved:'Draft saved', t_nothing_save:'Nothing to save',
+    t_draft_loaded:'Draft loaded', t_draft_deleted:'Draft deleted',
+    t_note_deleted:'Note deleted', t_note_loaded:'Note loaded in Composer', t_note_empty:'Empty note',
+  },
+  es: {
+    compose_title:'Compone <em>con intención</em>', compose_sub:'Tu voz, tu estilo, tu audiencia.',
+    style_default:'Neutro', style_viral:'Viral',
+    tab_tweet:'Tweet', tab_preview:'Vista previa',
+    compose_placeholder:'¿Qué está pasando en Base hoy?',
+    thread_add:'Añadir tweet', thread_del:'Eliminar',
+    preview_label:'Vista previa X', preview_empty:'Escribe un tweet para ver la vista previa...',
+    notes_title:'Mis <em>notas</em>', notes_sub:'Ideas, investigaciones, borradores pendientes.',
+    notes_search:'Buscar en notas...', note_title_ph:'Título...', note_body_ph:'Escribe aquí...',
+    note_to_compose:'→ Componer', note_delete:'Eliminar', note_close:'Cerrar',
+    tag_idea:'Idea', tag_draft:'Borrador', tag_ready:'Listo',
+    drafts_title:'Borradores <em>guardados</em>', filter_all:'Todos', filter_ideas:'Ideas',
+    drafts_count_one:'borrador', drafts_count_many:'borradores',
+    type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
+    empty_notes_title:'Sin notas', empty_notes_sub:'Pulsa + para crear tu primera nota.',
+    empty_drafts_title:'Sin borradores', empty_drafts_sub:'Guarda un tweet desde el Compositor.',
+    settings_title:'Ajustes', settings_sub:'Perfil, composición.',
+    s_profile:'Perfil X', s_name:'Nombre', s_compose:'Composición',
+    s_number:'Numerar hilos', s_autosave:'Guardado automático', s_autosave_desc:'Cada 30 segundos',
+ s_about:'Acerca de',
+    nav_compose:'Componer', nav_notes:'Notas', nav_drafts:'Borradores', nav_settings:'Ajustes',
+ t_max_media:'Máximo 4 medios por tweet',
+    t_copied:'Copiado al portapapeles', t_nothing_copy:'Nada que copiar',
+    t_draft_saved:'Borrador guardado', t_nothing_save:'Nada que guardar',
+    t_draft_loaded:'Borrador cargado', t_draft_deleted:'Borrador eliminado',
+    t_note_deleted:'Nota eliminada', t_note_loaded:'Nota cargada en el Compositor', t_note_empty:'Nota vacía',
+  }
+};
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+const S = {
+  lang:'fr', mode:'tweet', style:'default',
+  medias:[], notes:[], drafts:[], threads:[],
+  noteId:null, noteTag:'idea', suggestion:null,
+};
+
+// ═══════════════════════════════════════
+//  i18n ENGINE
+// ═══════════════════════════════════════
+function t(key) {
+  return TRANSLATIONS[S.lang]?.[key] ?? TRANSLATIONS.fr[key] ?? key;
+}
+
+function applyLang() {
+  document.documentElement.lang = S.lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.getAttribute('data-i18n'));
+    if (v) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const v = t(el.getAttribute('data-i18n-ph'));
+    if (v) el.placeholder = v;
+  });
+  const tipEl = document.getElementById('tip-text');
+  if (tipEl && !tipEl.dataset.userSet) tipEl.innerHTML = t('tip_default');
+  const xText = document.getElementById('x-text');
+  if (xText && xText.classList.contains('empty')) xText.textContent = t('preview_empty');
+  renderNotesList();
+  renderDraftsList();
+  if (S.mode === 'thread') renderThreads();
+  persist();
+}
+
+function setLang(lang, btn) {
+  S.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyLang();
+  if (S.style !== 'default') {
+    const tipEl = document.getElementById('tip-text');
+    if (tipEl) { tipEl.innerHTML = t('tip_'+S.style); tipEl.dataset.userSet='1'; }
+  }
+}
+
+
+
+
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+function init() {
+  loadData();
+  renderThreads();
+  renderNotesList();
+  renderDraftsList();
+  if (!S.threads.length) { addThread(); addThread(); }
+  document.getElementById('compose-textarea').addEventListener('input', updatePreview);
+  setInterval(() => { if (S.noteId) saveNote(); }, 30000);
+  applyLang();
+}
+
+// ═══════════════════════════════════════
+//  PANELS
+// ═══════════════════════════════════════
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('notes-fab').style.display = id==='notes' ? 'flex' : 'none';
+  if (id==='drafts') renderDraftsList();
+}
+
+// ═══════════════════════════════════════
+//  MODE
+// ═══════════════════════════════════════
+function setMode(m, btn) {
+  S.mode = m;
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['tweet','thread','preview'].forEach(id => {
+    const el = document.getElementById('mode-'+id);
+    if (el) el.style.display = id===m ? 'block' : 'none';
+  });
+  if (m==='preview') updatePreview();
+  if (m==='thread') renderThreads();
+}
+
+// ═══════════════════════════════════════
+//  STYLE
+// ═══════════════════════════════════════
+function selectStyle(btn, key) {
+  document.querySelectorAll('.style-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  S.style = key;
+  const tipEl = document.getElementById('tip-text');
+  if (tipEl) {
+    tipEl.innerHTML = t(key==='default' ? 'tip_default_text' : 'tip_'+key);
+    tipEl.dataset.userSet = '1';
+  }
+}
+
+// ═══════════════════════════════════════
+//  TEXT / CHAR COUNT
+// ═══════════════════════════════════════
+function onTextInput() {
+  const len = document.getElementById('compose-textarea').value.length;
+  const max = 280;
+  document.getElementById('char-num').textContent = len;
+  const ring = document.getElementById('ring');
+  ring.style.strokeDashoffset = 69.1 - Math.min(len/max,1)*69.1;
+  ring.style.stroke = len>max ? 'var(--red)' : len>240 ? '#f5a623' : 'var(--gold)';
+  document.getElementById('char-num').style.color = len>max ? 'var(--red)' : len>240 ? '#f5a623' : 'var(--fog)';
+}
+
+function updatePreview() {
+  const text = document.getElementById('compose-textarea').value;
+  const el = document.getElementById('x-text');
+  if (text.trim()) { el.textContent=text; el.classList.remove('empty'); }
+  else { el.textContent=t('preview_empty'); el.classList.add('empty'); }
+  updateMediaPreview();
+}
+
+function updateMediaPreview() {
+  const el = document.getElementById('x-media');
+  if (!S.medias.length) { el.style.display='none'; return; }
+  el.style.display='block';
+  const n = Math.min(S.medias.length,4);
+  el.innerHTML = `<div class="x-media-grid g${n}">${S.medias.slice(0,4).map(m=>`<div class="x-media-item"><img src="${m.url}"></div>`).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════
+//  MEDIA
+// ═══════════════════════════════════════
+function triggerMedia() { document.getElementById('file-in').click(); }
+
+function handleFiles(files) {
+  Array.from(files).forEach(f => {
+    if (S.medias.length>=4) { toast(t('t_max_media'),'err'); return; }
+    const r=new FileReader();
+    r.onload=e=>{S.medias.push({url:e.target.result,name:f.name}); renderMediaStrip();};
+    r.readAsDataURL(f);
+  });
+  document.getElementById('file-in').value='';
+}
+
+function renderMediaStrip() {
+  const el = document.getElementById('media-strip');
+  el.innerHTML = S.medias.map((m,i)=>`
+    <div class="media-thumb"><img src="${m.url}">
+      <button class="media-remove" onclick="removeMedia(${i})">×</button>
+    </div>`).join('')
+    + (S.medias.length<4?`<button class="media-add" onclick="triggerMedia()">+</button>`:'');
+  updateMediaPreview();
+}
+
+function removeMedia(i) { S.medias.splice(i,1); renderMediaStrip(); }
+
+// ═══════════════════════════════════════
+//  THREAD
+// ═══════════════════════════════════════
+function renderThreads() {
+  const el = document.getElementById('thread-container');
+  if (!el) return;
+  const name=getName(), initial=name[0]||'G', total=S.threads.length;
+  el.innerHTML = S.threads.map((tx,i)=>`
+    <div class="thread-tweet fade-up">
+      <div class="thread-col">
+        <div class="thread-avatar">${initial}</div>
+        ${i<total-1?'<div class="thread-line"></div>':''}
+      </div>
+      <div class="thread-body">
+        <div class="thread-meta">
+          <span class="thread-name">${name}</span>
+          <span class="thread-handle" style="font-size:12px;color:var(--fog)">@${getHandle()}</span>
+          <span class="thread-num">${i+1}/${total}</span>
+        </div>
+        <textarea class="thread-input" placeholder="Tweet ${i+1}..."
+          oninput="updateThread(${i},this.value)">${tx}</textarea>
+        <div class="thread-foot">
+          <span class="thread-count">${tx.length}/280</span>
+          ${total>1?`<button class="thread-del" onclick="removeThread(${i})">${t('thread_del')}</button>`:''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function addThread()        { S.threads.push(''); renderThreads(); }
+function removeThread(i)    { S.threads.splice(i,1); renderThreads(); }
+function updateThread(i,v)  {
+  S.threads[i]=v;
+  const c=document.querySelectorAll('.thread-count');
+  if(c[i]) c[i].textContent=`${v.length}/280`;
+}
+
+
+
+// ═══════════════════════════════════════
+//  COPY / DRAFT
+// ═══════════════════════════════════════
+function copyToClipboard() {
+  const text = S.mode==='thread'
+    ? S.threads.map((tx,i)=>`${i+1}/ ${tx}`).filter(Boolean).join('\n\n')
+    : document.getElementById('compose-textarea').value;
+  if (!text.trim()) { toast(t('t_nothing_copy'),'err'); return; }
+  navigator.clipboard.writeText(text).then(()=>toast(t('t_copied'),'ok'));
+}
+
+function saveDraft() {
+  const text = S.mode==='thread'
+    ? S.threads.filter(Boolean).join('\n---\n')
+    : document.getElementById('compose-textarea').value.trim();
+  if (!text) { toast(t('t_nothing_save'),'err'); return; }
+  S.drafts.unshift({id:Date.now(),type:S.mode==='thread'?'thread':'tweet',text:text.slice(0,160),full:text,date:fmtDate()});
+  persist(); toast(t('t_draft_saved'),'ok');
+}
+
+
+
+// ═══════════════════════════════════════
+//  NOTES
+// ═══════════════════════════════════════
+function createNote() {
+  const n={id:Date.now(),title:'',body:'',tag:'idea',date:fmtDate()};
+  S.notes.unshift(n); persist(); openNoteSheet(n.id); renderNotesList();
+}
+
+function openNoteSheet(id) {
+  S.noteId=id;
+  const n=S.notes.find(x=>x.id===id); if(!n) return;
+  document.getElementById('note-title').value=n.title;
+  document.getElementById('note-body').value=n.body;
+  S.noteTag=n.tag; updateNoteTagBtns(n.tag);
+  document.getElementById('note-sheet').classList.add('open');
+}
+
+function closeNoteSheet() {
+  document.getElementById('note-sheet').classList.remove('open');
+  S.noteId=null; renderNotesList();
+}
+
+function saveNote() {
+  if (!S.noteId) return;
+  const i=S.notes.findIndex(x=>x.id===S.noteId); if(i<0) return;
+  S.notes[i].title=document.getElementById('note-title').value||t('note_title_ph');
+  S.notes[i].body=document.getElementById('note-body').value;
+  S.notes[i].tag=S.noteTag; S.notes[i].date=fmtDate(); persist();
+}
+
+function deleteNote() {
+  if (!S.noteId) return;
+  S.notes=S.notes.filter(n=>n.id!==S.noteId); persist();
+  closeNoteSheet(); toast(t('t_note_deleted'),'inf');
+}
+
+function setNoteTag(tag) {
+  S.noteTag=tag; updateNoteTagBtns(tag); saveNote();
+}
+
+function updateNoteTagBtns(tag) {
+  const tagMap={'tag_idea':'idea','tag_draft':'draft','tag_ready':'ready'};
+  document.querySelectorAll('.ntag-btn').forEach(b=>{
+    b.className='ntag-btn';
+    const k=b.getAttribute('data-i18n');
+    const bt=tagMap[k]||'thread';
+    if(bt===tag) b.className=`ntag-btn active-${tag}`;
+  });
+}
+
+function renderNotesList(filter='') {
+  const el=document.getElementById('notes-list'); if(!el) return;
+  const notes=filter?S.notes.filter(n=>(n.title+n.body).toLowerCase().includes(filter)):S.notes;
+  if (!notes.length) {
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📝</div>
+      <div class="empty-title">${t('empty_notes_title')}</div>
+      <div class="empty-sub">${t('empty_notes_sub')}</div></div>`;
+    return;
+  }
+  el.innerHTML=notes.map(n=>`
+    <div class="note-card tag-${n.tag} ${n.id===S.noteId?'selected':''} fade-up" onclick="openNoteSheet(${n.id})">
+      <div class="note-card-title">${n.title||'…'}</div>
+      <div class="note-card-preview">${n.body||'…'}</div>
+      <div class="note-card-foot">
+        <span class="tag-badge ${n.tag}">${t('tag_'+n.tag)||n.tag}</span>
+        <span class="note-date">${n.date}</span>
+      </div>
+    </div>`).join('');
+}
+
+function filterNotes(q) { renderNotesList(q.toLowerCase()); }
+
+function sendNoteToCompose() {
+  const body=document.getElementById('note-body').value.trim();
+  if (!body) { toast(t('t_note_empty'),'err'); return; }
+  document.getElementById('compose-textarea').value=body.slice(0,280);
+  onTextInput(); closeNoteSheet();
+  showPanel('compose',document.getElementById('nav-compose'));
+  toast(t('t_note_loaded'),'ok');
+}
+
+// ═══════════════════════════════════════
+//  DRAFTS
+// ═══════════════════════════════════════
+function renderDraftsList(filter='all') {
+  const el=document.getElementById('drafts-list'); if(!el) return;
+  const drafts=filter==='all'?S.drafts:S.drafts.filter(d=>d.type===filter);
+  const cnt=document.getElementById('drafts-count');
+  if(cnt) cnt.textContent=`${drafts.length} ${drafts.length>1?t('drafts_count_many'):t('drafts_count_one')}`;
+  if (!drafts.length) {
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📁</div>
+      <div class="empty-title">${t('empty_drafts_title')}</div>
+      <div class="empty-sub">${t('empty_drafts_sub')}</div></div>`;
+    return;
+  }
+  el.innerHTML=drafts.map(d=>`
+    <div class="draft-card dt-${d.type} fade-up">
+      <div class="draft-card-bar"></div>
+      <div class="draft-type-label">${d.type==='thread'?t('type_thread'):t('type_tweet')}</div>
+      <div class="draft-text">${d.text}</div>
+      <div class="draft-foot">
+        <span class="draft-date">${d.date}</span>
+        <div class="draft-actions">
+          <button class="draft-act" onclick="loadDraft(${d.id})">→</button>
+          <button class="draft-act del" onclick="deleteDraft(${d.id})">×</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterDrafts(f,btn) {
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active'); renderDraftsList(f);
+}
+
+function loadDraft(id) {
+  const d=S.drafts.find(x=>x.id===id); if(!d) return;
+  document.getElementById('compose-textarea').value=d.full||d.text;
+  onTextInput(); showPanel('compose',document.getElementById('nav-compose'));
+  toast(t('t_draft_loaded'),'ok');
+}
+
+function deleteDraft(id) {
+  S.drafts=S.drafts.filter(d=>d.id!==id); persist(); renderDraftsList();
+  toast(t('t_draft_deleted'),'inf');
+}
+
+// ═══════════════════════════════════════
+//  PROFILE
+// ═══════════════════════════════════════
+function updateProfile() {
+  const name=getName(), handle=getHandle();
+  ['av-name','xav-name'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=name;});
+  ['av-handle','xav-handle'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='@'+handle;});
+  ['av-letter','xav-letter'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=name[0]||'G';});
+  renderThreads();
+}
+function getName()   { return document.getElementById('s-name')?.value||'John Doe'; }
+function getHandle() { return (document.getElementById('s-handle')?.value||'johndoe').replace('@',''); }
+
+// ═══════════════════════════════════════
+//  EMOJI
+// ═══════════════════════════════════════
+function insertEmoji(e) {
+  const ta=document.getElementById('compose-textarea');
+  const pos=ta.selectionStart;
+  ta.value=ta.value.slice(0,pos)+e+ta.value.slice(pos);
+  ta.selectionStart=ta.selectionEnd=pos+e.length;
+  ta.focus(); onTextInput();
+}
+
+// ═══════════════════════════════════════
+//  PERSISTENCE
+// ═══════════════════════════════════════
+function persist() {
+  try {
+    localStorage.setItem('xcabin_notes', JSON.stringify(S.notes));
+    localStorage.setItem('xcabin_drafts',JSON.stringify(S.drafts));
+    localStorage.setItem('xcabin_lang',  S.lang);
+  } catch(e){}
+}
+
+function loadData() {
+  try {
+    const n=localStorage.getItem('xcabin_notes');  if(n) S.notes =JSON.parse(n);
+    const d=localStorage.getItem('xcabin_drafts'); if(d) S.drafts=JSON.parse(d);
+    const k=localStorage.getItem('xcabin_key');    if(k) document.getElementById('s-apikey').value=k;
+    const l=localStorage.getItem('xcabin_lang');
+    if(l&&['fr','en','es'].includes(l)){
+      S.lang=l;
+      document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===l));
+    }
+  } catch(e){}
+  if (!S.notes.length) S.notes=[
+    {id:1,title:'Thread — Écosystème Base L2',body:'Idées :\n- Wallet tracking avancé\n- AI agents on-chain\n- Nouveaux protocoles DeFi',tag:'idea',date:'15 mars'},
+    {id:2,title:'$CLICK & ERC-7710',body:"ERC-7710 = standard pour permissions déléguées sur EVM. $CLICK = premier token majeur à l'implémenter.",tag:'draft',date:'14 mars'},
+  ];
+  if (!S.drafts.length) S.drafts=[
+    {id:1,type:'tweet',text:"🚨 Base atteint 1M de transactions quotidiennes pour la première fois.",full:"🚨 Base atteint 1M de transactions quotidiennes pour la première fois. Ce n'est plus une L2 parmi d'autres.",date:'15 mars'},
+    {id:2,type:'thread',text:'🧵 Tout ce que tu dois savoir sur les AI agents on-chain...',full:"1/ AI agents on-chain\n---\n2/ Ils signent des transactions de manière autonome\n---\n3/ ERC-7710 change tout",date:'13 mars'},
+  ];
+  persist();
+}
+
+catch(e){} }
+
+// ═══════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════
+function toast(msg,type='inf') {
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.textContent=`${type==='ok'?'✓':type==='err'?'⚠':'·'} ${msg}`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),2800);
+}
+
+// ═══════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════
+function fmtDate() {
+  const locales={fr:'fr-FR',en:'en-US',es:'es-ES'};
+  return new Date().toLocaleDateString(locales[S.lang]||'fr-FR',{day:'2-digit',month:'short'});
+}
+
+init();
+</script>
+</body>
+</html>
