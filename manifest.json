@@ -1,0 +1,26 @@
+{
+  "name": "X Cabin",
+  "short_name": "X Cabin",
+  "description": "Votre atelier de création de contenu X — tweets, threads, notes et brouillons.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#09090c",
+  "theme_color": "#09090c",
+  "lang": "fr",
+  "categories": ["productivity", "social"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Nouveau tweet",
+      "short_name": "Composer",
+      "description": "Ouvrir le compositeur",
+      "url": "/?panel=compose",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
