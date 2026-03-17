@@ -467,16 +467,7 @@ body::before {
 /* ══════════════════════════════════
    AI SUGGESTION BLOCK
 ══════════════════════════════════ */
-.ai-block {
-  margin: 0 14px 14px;
-  background: linear-gradient(135deg, rgba(201,168,76,0.07), rgba(201,168,76,0.03));
-  border: 1px solid rgba(201,168,76,0.22);
-  border-radius: var(--r-lg);
-  padding: 14px;
-  display: none;
-  position: relative;
-}
-.ai-block.visible { display: block; }
+
 
 .ai-label {
   font-size: 10px;
@@ -519,15 +510,7 @@ body::before {
   line-height: 1;
 }
 
-.ai-loading {
-  margin: 0 14px 14px;
-  display: none;
-  align-items: center;
-  gap: 10px;
-  color: var(--fog);
-  font-size: 13px;
-}
-.ai-loading.visible { display: flex; }
+
 
 .pulse-dots { display: flex; gap: 4px; }
 .pulse-dots span {
@@ -586,7 +569,7 @@ body::before {
 /* ══════════════════════════════════
    STYLE TIP CARD
 ══════════════════════════════════ */
-.tip-card {
+.tip-card-unused {
   margin: 0 14px 14px;
   background: var(--ink2);
   border: 1px solid var(--border);
@@ -1197,59 +1180,7 @@ body::before {
 }
 .lang-btn.active { background: var(--gold); color: var(--ink); }
 
-/* ══════════════════════════════════
-   API GUIDE CARD
-══════════════════════════════════ */
-.api-guide {
-  background: rgba(201,168,76,0.05);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: var(--r-xl);
-  overflow: hidden;
-}
-.api-guide-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 16px;
-  cursor: pointer;
-  user-select: none;
-}
-.api-guide-title { font-size: 13px; font-weight: 600; color: var(--gold2); flex: 1; }
-.api-guide-chevron { color: var(--gold); font-size: 14px; transition: transform 0.2s; }
-.api-guide.open .api-guide-chevron { transform: rotate(180deg); }
-.api-guide-body { display: none; padding: 0 16px 16px; }
-.api-guide.open .api-guide-body { display: block; }
-.api-step {
-  display: flex; gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.api-step:last-child { border-bottom: none; }
-.api-step-num {
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--gold-dim2); border: 1px solid var(--gold);
-  color: var(--gold2); font-size: 10px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 1px;
-}
-.api-step-text { font-size: 12.5px; line-height: 1.65; color: var(--fog); }
-.api-step-text a { color: var(--gold2); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); }
-.api-step-text strong { color: var(--snow); font-weight: 600; }
-.api-step-text code {
-  background: var(--ink3); border: 1px solid var(--border2);
-  border-radius: 4px; padding: 1px 5px;
-  font-family: 'Courier New', monospace; font-size: 11px; color: var(--gold3);
-}
-.api-warn {
-  margin-top: 10px; padding: 9px 12px;
-  background: rgba(224,85,85,0.08); border: 1px solid rgba(224,85,85,0.2);
-  border-radius: var(--r-sm); font-size: 12px; color: #ff9999; line-height: 1.5;
-}
-.api-ok {
-  margin-top: 8px; padding: 9px 12px;
-  background: rgba(76,175,130,0.08); border: 1px solid rgba(76,175,130,0.2);
-  border-radius: var(--r-sm); font-size: 12px; color: #6fd4a2; line-height: 1.5;
-}
+
 
 /* ── Ask Claude button ── */
 .btn-ask-claude {
@@ -1383,8 +1314,8 @@ body::before {
             <div class="compose-header">
               <div class="compose-avatar" id="av-letter">G</div>
               <div class="compose-meta">
-                <div class="compose-name" id="av-name">God Candle</div>
-                <div class="compose-handle" id="av-handle">@GodCandleGroup</div>
+                <div class="compose-name" id="av-name">John Doe</div>
+                <div class="compose-handle" id="av-handle">@johndoe</div>
               </div>
               <div class="char-indicator">
                 <svg class="ring-svg" width="28" height="28" viewBox="0 0 28 28">
@@ -1417,10 +1348,6 @@ body::before {
 
         <!-- Media strip -->
         <div id="media-strip" class="media-strip fade-up"></div>
-
-        <!-- Tip card -->
-        <div class="tip-card fade-up">
-          <div class="tip-label" data-i18n="tip_label">Conseil · style actif</div>
           <div id="tip-text" class="tip-text" data-i18n="tip_default">Sélectionnez un style pour voir les conseils de rédaction.</div>
         </div>
 
@@ -1455,8 +1382,8 @@ body::before {
             <div class="x-card-header">
               <div class="x-avatar" id="xav-letter">G</div>
               <div>
-                <div class="x-name" id="xav-name">God Candle</div>
-                <div class="x-handle" id="xav-handle">@GodCandleGroup</div>
+                <div class="x-name" id="xav-name">John Doe</div>
+                <div class="x-handle" id="xav-handle">@johndoe</div>
               </div>
             </div>
             <div id="x-text" class="x-text empty" data-i18n="preview_empty">Composez un tweet pour voir l'aperçu...</div>
@@ -1535,7 +1462,7 @@ body::before {
     <div id="p-settings" class="panel scroll-body">
       <div class="section-head">
         <div class="section-title" data-i18n="settings_title">Paramètres</div>
-        <div class="section-sub" data-i18n="settings_sub">Profil, composition, API.</div>
+        <div class="section-sub" data-i18n="settings_sub">Profil, composition.</div>
       </div>
 
       <div class="settings-list">
@@ -1544,12 +1471,12 @@ body::before {
           <div class="settings-row">
             <span class="s-icon">👤</span>
             <div class="s-info"><div class="s-label" data-i18n="s_name">Nom</div></div>
-            <input class="s-input" id="s-name" value="God Candle" oninput="updateProfile()">
+            <input class="s-input" id="s-name" value="John Doe" oninput="updateProfile()">
           </div>
           <div class="settings-row">
             <span class="s-icon" style="font-size:14px;color:var(--fog)">@</span>
             <div class="s-info"><div class="s-label">Handle</div></div>
-            <input class="s-input" id="s-handle" value="@GodCandleGroup" oninput="updateProfile()">
+            <input class="s-input" id="s-handle" value="@johndoe" oninput="updateProfile()">
           </div>
         </div>
 
@@ -1572,34 +1499,9 @@ body::before {
             <button class="toggle-track on" onclick="this.classList.toggle('on')"></button>
           </div>
         </div>
-
-        <!-- ASK CLAUDE GROUP -->
-        <div class="settings-group">
-          <div class="settings-group-label" data-i18n="s_ai">Intelligence artificielle</div>
-          <div class="settings-row" style="gap:14px">
-            <span class="s-icon">🤖</span>
-            <div class="s-info">
-              <div class="s-label" data-i18n="s_ai_mode_label">Mode Claude.ai</div>
-              <div class="s-desc" data-i18n="s_ai_mode_desc">Aucune clé requise — s'ouvre dans Claude</div>
-            </div>
             <div style="width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 6px var(--green)"></div>
           </div>
         </div>
-
-        <!-- HOW IT WORKS -->
-        <div class="api-guide" id="api-guide">
-          <div class="api-guide-head" onclick="toggleApiGuide()">
-            <span style="font-size:16px">💡</span>
-            <span class="api-guide-title" data-i18n="guide_title">Comment fonctionne l'IA dans X Cabin ?</span>
-            <span class="api-guide-chevron">▾</span>
-          </div>
-          <div class="api-guide-body">
-            <div class="api-step">
-              <div class="api-step-num">1</div>
-              <div class="api-step-text" data-i18n="guide_step1">
-                Écrivez votre tweet dans le <strong>Compositeur</strong> et choisissez un style (Alpha, DeFi, Viral...).
-              </div>
-            </div>
             <div class="api-step">
               <div class="api-step-num">2</div>
               <div class="api-step-text" data-i18n="guide_step2">
@@ -1686,9 +1588,6 @@ const TRANSLATIONS = {
     style_default:'Neutre', style_viral:'Viral',
     tab_tweet:'Tweet', tab_preview:'Aperçu',
     compose_placeholder:"Qu'est-ce qui se passe sur Base aujourd'hui ?",
-    ai_loading:'Génération IA en cours...', ai_suggestion:'Suggestion IA',
-    ai_apply:'Appliquer', ai_dismiss:'Ignorer', ai_btn:'Améliorer avec IA',
-    tip_label:'Conseil · style actif', tip_default:'Sélectionnez un style pour voir les conseils de rédaction.',
     thread_add:'Ajouter un tweet', thread_del:'Supprimer',
     preview_label:'Aperçu X', preview_empty:"Composez un tweet pour voir l'aperçu...",
     notes_title:'Mes <em>notes</em>', notes_sub:'Idées, recherches, brouillons en attente.',
@@ -1700,43 +1599,23 @@ const TRANSLATIONS = {
     type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
     empty_notes_title:'Aucune note', empty_notes_sub:'Appuyez sur + pour créer votre première note.',
     empty_drafts_title:'Aucun brouillon', empty_drafts_sub:'Sauvegardez un tweet depuis le Composer.',
-    settings_title:'Paramètres', settings_sub:'Profil, composition, API.',
+    settings_title:'Paramètres', settings_sub:'Profil, composition.',
     s_profile:'Profil X', s_name:'Nom', s_compose:'Composition',
     s_number:'Numéroter les threads', s_autosave:'Auto-sauvegarde', s_autosave_desc:'Toutes les 30 secondes',
-    s_ai:'Intelligence artificielle', s_apikey_label:'Clé API Anthropic', s_apikey_desc:'Pour les suggestions réelles',
-    s_ai_active:'Suggestions actives', s_ai_active_desc:'Amélioration automatique', s_about:'À propos',
-    guide_title:'Comment obtenir et configurer votre clé API',
-    guide_step1:'Rendez-vous sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> et créez un compte gratuit.',
-    guide_step2:'Dans le menu, allez dans <strong>API Keys</strong> → <strong>Create Key</strong>. Nommez-la <em>"X Cabin"</em>.',
-    guide_step3:'Copiez la clé (format <code>sk-ant-api03-...</code>). Elle n'est affichée qu'une seule fois.',
-    guide_step4:'Collez-la dans le champ <strong>Clé API Anthropic</strong> ci-dessus. Elle est sauvegardée localement sur votre appareil.',
-    guide_step5:'Ajoutez du crédit sur <a href="https://console.anthropic.com/settings/billing" target="_blank">la page Billing</a>. <strong>$5 suffisent pour des milliers de suggestions.</strong>',
-    guide_step6:'Retournez dans le <strong>Compositeur</strong>, écrivez un tweet, et appuyez sur <em>"Améliorer avec IA"</em>.',
-    guide_warn:"⚠️ L'app appelle l'API directement depuis votre navigateur. Pour la production, utilisez un backend proxy.",
-    guide_ok:"✓ Votre clé n'est jamais envoyée à nos serveurs — elle reste uniquement dans le localStorage de votre appareil.",
+ s_about:'À propos',
+est affichée qu'une seule fois.',
     nav_compose:'Composer', nav_notes:'Notes', nav_drafts:'Brouillons', nav_settings:'Réglages',
-    t_compose_first:"Composez d'abord un tweet", t_max_media:'Maximum 4 médias par tweet',
+ t_max_media:'Maximum 4 médias par tweet',
     t_copied:'Copié dans le presse-papiers', t_nothing_copy:'Rien à copier',
     t_draft_saved:'Brouillon sauvegardé', t_nothing_save:'Rien à sauvegarder',
     t_draft_loaded:'Brouillon chargé', t_draft_deleted:'Brouillon supprimé',
     t_note_deleted:'Note supprimée', t_note_loaded:'Note chargée dans Composer', t_note_empty:'Note vide',
-    t_ai_applied:'Suggestion appliquée',
-    tip_default_text:"Écriture claire et directe. Idéal pour partager des informations factuelles sur Base L2 et l'écosystème EVM.",
-    tip_alpha:"⚡ Information exclusive en premier. 'Wallet X vient de déplacer 500K$' — prouve la valeur avant de conclure.",
-    tip_defi:"📊 Données d'abord. APY, TVL, volume — les chiffres parlent. Terminologie DeFi précise.",
-    tip_viral:"🔥 Opinion tranchée ou fait surprenant. Commence fort. L'inconfort crée l'engagement.",
-    tip_hook:"🎣 La première ligne = tout. Curiosity gap maximal. 'Voici pourquoi X va exploser'.",
-    tip_insight:"💡 Partage ce que les autres ne voient pas encore. Patterns on-chain, conclusions uniques.",
-    tip_thread:'🧵 Hook en 1/. Développe en 2-8/. Conclusion + CTA final. Chaque tweet doit valoir le scroll seul.',
   },
   en: {
     compose_title:'Compose <em>with intention</em>', compose_sub:'Your voice, your style, your audience.',
     style_default:'Neutral', style_viral:'Viral',
     tab_tweet:'Tweet', tab_preview:'Preview',
     compose_placeholder:"What's happening on Base today?",
-    ai_loading:'AI generation in progress...', ai_suggestion:'AI Suggestion',
-    ai_apply:'Apply', ai_dismiss:'Dismiss', ai_btn:'Enhance with AI',
-    tip_label:'Tip · active style', tip_default:'Select a style to see writing tips.',
     thread_add:'Add a tweet', thread_del:'Delete',
     preview_label:'X Preview', preview_empty:'Write a tweet to see the preview...',
     notes_title:'My <em>notes</em>', notes_sub:'Ideas, research, pending drafts.',
@@ -1751,40 +1630,19 @@ const TRANSLATIONS = {
     settings_title:'Settings', settings_sub:'Profile, composition, API.',
     s_profile:'X Profile', s_name:'Name', s_compose:'Composition',
     s_number:'Number threads', s_autosave:'Auto-save', s_autosave_desc:'Every 30 seconds',
-    s_ai:'Artificial intelligence', s_apikey_label:'Anthropic API Key', s_apikey_desc:'For real AI suggestions',
-    s_ai_active:'Active suggestions', s_ai_active_desc:'Automatic enhancement', s_about:'About',
-    guide_title:'How to get and set up your API key',
-    guide_step1:'Go to <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> and create a free account.',
-    guide_step2:'In the menu, go to <strong>API Keys</strong> → <strong>Create Key</strong>. Name it <em>"X Cabin"</em>.',
-    guide_step3:'Copy the key (format <code>sk-ant-api03-...</code>). It is only shown once.',
-    guide_step4:'Paste it into the <strong>Anthropic API Key</strong> field above. It is saved locally on your device.',
-    guide_step5:'Add credits on <a href="https://console.anthropic.com/settings/billing" target="_blank">the Billing page</a>. <strong>$5 covers thousands of suggestions.</strong>',
-    guide_step6:'Go back to the <strong>Composer</strong>, write a tweet, and tap <em>"Enhance with AI"</em>.',
-    guide_warn:'⚠️ The app calls the API directly from your browser. For production, use a backend proxy to protect your key.',
-    guide_ok:"✓ Your key is never sent to our servers — it stays only in your device's localStorage.",
+ s_about:'About',
     nav_compose:'Compose', nav_notes:'Notes', nav_drafts:'Drafts', nav_settings:'Settings',
-    t_compose_first:'Write something first', t_max_media:'Maximum 4 media per tweet',
+ t_max_media:'Maximum 4 media per tweet',
     t_copied:'Copied to clipboard', t_nothing_copy:'Nothing to copy',
     t_draft_saved:'Draft saved', t_nothing_save:'Nothing to save',
     t_draft_loaded:'Draft loaded', t_draft_deleted:'Draft deleted',
     t_note_deleted:'Note deleted', t_note_loaded:'Note loaded in Composer', t_note_empty:'Empty note',
-    t_ai_applied:'Suggestion applied',
-    tip_default_text:"Clear, direct writing. Ideal for sharing factual info about Base L2 and the EVM ecosystem.",
-    tip_alpha:"⚡ Exclusive info first. 'Wallet X just moved 500K$' — prove value before concluding. Confident tone.",
-    tip_defi:'📊 Data first. APY, TVL, volume — numbers speak. Precise DeFi terminology. Targets power users.',
-    tip_viral:"🔥 Sharp opinion or surprising fact. Start strong. Discomfort drives engagement.",
-    tip_hook:"🎣 The first line is everything. Maximum curiosity gap. 'Here's why X will explode'.",
-    tip_insight:"💡 Share what others don't see yet. On-chain patterns, unique conclusions.",
-    tip_thread:'🧵 Hook in 1/. Develop in 2-8/. Conclusion + CTA last. Every tweet must stand alone.',
   },
   es: {
     compose_title:'Compone <em>con intención</em>', compose_sub:'Tu voz, tu estilo, tu audiencia.',
     style_default:'Neutro', style_viral:'Viral',
     tab_tweet:'Tweet', tab_preview:'Vista previa',
     compose_placeholder:'¿Qué está pasando en Base hoy?',
-    ai_loading:'Generando con IA...', ai_suggestion:'Sugerencia IA',
-    ai_apply:'Aplicar', ai_dismiss:'Ignorar', ai_btn:'Mejorar con IA',
-    tip_label:'Consejo · estilo activo', tip_default:'Selecciona un estilo para ver los consejos de escritura.',
     thread_add:'Añadir tweet', thread_del:'Eliminar',
     preview_label:'Vista previa X', preview_empty:'Escribe un tweet para ver la vista previa...',
     notes_title:'Mis <em>notas</em>', notes_sub:'Ideas, investigaciones, borradores pendientes.',
@@ -1796,34 +1654,16 @@ const TRANSLATIONS = {
     type_tweet:'✏️ Tweet', type_thread:'🧵 Thread',
     empty_notes_title:'Sin notas', empty_notes_sub:'Pulsa + para crear tu primera nota.',
     empty_drafts_title:'Sin borradores', empty_drafts_sub:'Guarda un tweet desde el Compositor.',
-    settings_title:'Ajustes', settings_sub:'Perfil, composición, API.',
+    settings_title:'Ajustes', settings_sub:'Perfil, composición.',
     s_profile:'Perfil X', s_name:'Nombre', s_compose:'Composición',
     s_number:'Numerar hilos', s_autosave:'Guardado automático', s_autosave_desc:'Cada 30 segundos',
-    s_ai:'Inteligencia artificial', s_apikey_label:'Clave API Anthropic', s_apikey_desc:'Para sugerencias reales',
-    s_ai_active:'Sugerencias activas', s_ai_active_desc:'Mejora automática', s_about:'Acerca de',
-    guide_title:'Cómo obtener y configurar tu clave API',
-    guide_step1:'Ve a <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> y crea una cuenta gratuita.',
-    guide_step2:'En el menú, ve a <strong>API Keys</strong> → <strong>Create Key</strong>. Nómbrala <em>"X Cabin"</em>.',
-    guide_step3:'Copia la clave (formato <code>sk-ant-api03-...</code>). Solo se muestra una vez.',
-    guide_step4:'Pégala en el campo <strong>Clave API Anthropic</strong> arriba. Se guarda localmente en tu dispositivo.',
-    guide_step5:'Añade crédito en <a href="https://console.anthropic.com/settings/billing" target="_blank">la página de Billing</a>. <strong>$5 son suficientes para miles de sugerencias.</strong>',
-    guide_step6:'Vuelve al <strong>Compositor</strong>, escribe un tweet y pulsa <em>"Mejorar con IA"</em>.',
-    guide_warn:'⚠️ La app llama a la API directamente desde tu navegador. Para producción, usa un proxy backend para proteger tu clave.',
-    guide_ok:"✓ Tu clave nunca se envía a nuestros servidores — permanece solo en el localStorage de tu dispositivo.",
+ s_about:'Acerca de',
     nav_compose:'Componer', nav_notes:'Notas', nav_drafts:'Borradores', nav_settings:'Ajustes',
-    t_compose_first:'Escribe algo primero', t_max_media:'Máximo 4 medios por tweet',
+ t_max_media:'Máximo 4 medios por tweet',
     t_copied:'Copiado al portapapeles', t_nothing_copy:'Nada que copiar',
     t_draft_saved:'Borrador guardado', t_nothing_save:'Nada que guardar',
     t_draft_loaded:'Borrador cargado', t_draft_deleted:'Borrador eliminado',
     t_note_deleted:'Nota eliminada', t_note_loaded:'Nota cargada en el Compositor', t_note_empty:'Nota vacía',
-    t_ai_applied:'Sugerencia aplicada',
-    tip_default_text:"Escritura clara y directa. Ideal para compartir info factual sobre Base L2 y el ecosistema EVM.",
-    tip_alpha:"⚡ Info exclusiva primero. 'La wallet X acaba de mover 500K$' — demuestra valor antes de concluir.",
-    tip_defi:'📊 Datos primero. APY, TVL, volumen — los números hablan. Terminología DeFi precisa.',
-    tip_viral:'🔥 Opinión tajante o hecho sorprendente. Empieza fuerte. La incomodidad genera engagement.',
-    tip_hook:"🎣 La primera línea es todo. Máximo curiosity gap. 'Por qué X va a explotar'.",
-    tip_insight:'💡 Comparte lo que otros aún no ven. Patrones on-chain, conclusiones únicas.',
-    tip_thread:'🧵 Hook en 1/. Desarrolla en 2-8/. Conclusión + CTA al final. Cada tweet debe valer el scroll.',
   }
 };
 
@@ -1874,27 +1714,9 @@ function setLang(lang, btn) {
   }
 }
 
-// ═══════════════════════════════════════
-//  AI PROMPTS (always in French for quality)
-// ═══════════════════════════════════════
-const STYLE_PROMPTS = {
-  default: tx => `Améliore ce tweet pour X, naturel et concis (max 280 chars), sans emojis excessifs. Tweet: ${tx}`,
-  alpha:   tx => `Réécris en style alpha crypto : info exclusive, ton confiant, chiffres concrets, max 260 chars. Tweet: ${tx}`,
-  defi:    tx => `Réécris en style DeFi expert : données précises, terminologie on-chain, ton analytique, max 270 chars. Tweet: ${tx}`,
-  viral:   tx => `Réécris pour maximiser l'engagement viral : opinion forte, angle inattendu, max 260 chars. Tweet: ${tx}`,
-  hook:    tx => `Réécris comme hook irrésistible : curiosity gap maximal, max 100 chars. Tweet: ${tx}`,
-  insight: tx => `Réécris comme insight analytique profond : observation unique, raisonnement dense, max 270 chars. Tweet: ${tx}`,
-  thread:  tx => `Transforme en hook de thread percutant (premier tweet uniquement), max 260 chars. Contenu: ${tx}`,
-};
 
-const DEMOS = {
-  alpha:   '🚨 500K$ vient de quitter un wallet dormant sur Base. Mouvement inhabituel. Tracking en cours 👀',
-  viral:   "Unpopular opinion : 90% des projets Base actuels n'existeront plus dans 18 mois. Mais les 10% restants vont tout changer.",
-  defi:    'APY 340% sur le nouveau pool Base/ETH. TVL $2.1M. Audité, 0 incidents en 3 mois. Fenêtre étroite.',
-  hook:    "Ce wallet a fait ×47 en 6 semaines. Voici exactement comment il a repéré l'entrée...",
-  insight: 'Les wallets les plus rentables sur Base entrent tous sur des protocoles avec moins de 500K TVL. Voici pourquoi.',
-  thread:  '🧵 Tout ce que tu dois savoir sur les AI agents on-chain en 2026 — et pourquoi Base est le meilleur terrain de jeu',
-};
+
+
 
 // ═══════════════════════════════════════
 //  INIT
@@ -2044,57 +1866,7 @@ function updateThread(i,v)  {
   if(c[i]) c[i].textContent=`${v.length}/280`;
 }
 
-// ═══════════════════════════════════════
-//  AI
-// ═══════════════════════════════════════
-async function generateAI() {
-  const text = document.getElementById('compose-textarea').value.trim();
-  if (!text) { toast(t('t_compose_first'),'err'); return; }
-  document.getElementById('ai-loading').classList.add('visible');
-  document.getElementById('ai-block').classList.remove('visible');
-  const apiKey = localStorage.getItem('xcabin_key')||'';
-  const prompt = (STYLE_PROMPTS[S.style]||STYLE_PROMPTS.default)(text);
-  try {
-    if (!apiKey) throw new Error('no_key');
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true',
-      },
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:400,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-    if (!res.ok) throw new Error('api_error');
-    const data = await res.json();
-    const sug = data.content?.[0]?.text?.trim();
-    if (sug) showSuggestion(sug); else throw new Error('empty');
-  } catch(e) {
-    const demo = DEMOS[S.style];
-    showSuggestion(demo || (apiKey
-      ? '⚠️ API error — check your key or credit balance in console.anthropic.com.'
-      : '→ Add your Anthropic API key in Settings → AI to activate real suggestions.'));
-  }
-  document.getElementById('ai-loading').classList.remove('visible');
-}
 
-function showSuggestion(text) {
-  S.suggestion=text;
-  document.getElementById('ai-text').textContent=text;
-  document.getElementById('ai-block').classList.add('visible');
-}
-function applyAI() {
-  if(!S.suggestion) return;
-  document.getElementById('compose-textarea').value=S.suggestion;
-  onTextInput(); dismissAI();
-  toast(t('t_ai_applied'),'ok');
-}
-function dismissAI() { document.getElementById('ai-block').classList.remove('visible'); S.suggestion=null; }
 
 // ═══════════════════════════════════════
 //  COPY / DRAFT
@@ -2116,10 +1888,7 @@ function saveDraft() {
   persist(); toast(t('t_draft_saved'),'ok');
 }
 
-// ═══════════════════════════════════════
-//  API GUIDE
-// ═══════════════════════════════════════
-function toggleApiGuide() { document.getElementById('api-guide').classList.toggle('open'); }
+
 
 // ═══════════════════════════════════════
 //  NOTES
@@ -2258,8 +2027,8 @@ function updateProfile() {
   ['av-letter','xav-letter'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=name[0]||'G';});
   renderThreads();
 }
-function getName()   { return document.getElementById('s-name')?.value||'God Candle'; }
-function getHandle() { return (document.getElementById('s-handle')?.value||'GodCandleGroup').replace('@',''); }
+function getName()   { return document.getElementById('s-name')?.value||'John Doe'; }
+function getHandle() { return (document.getElementById('s-handle')?.value||'johndoe').replace('@',''); }
 
 // ═══════════════════════════════════════
 //  EMOJI
@@ -2287,7 +2056,6 @@ function loadData() {
   try {
     const n=localStorage.getItem('xcabin_notes');  if(n) S.notes =JSON.parse(n);
     const d=localStorage.getItem('xcabin_drafts'); if(d) S.drafts=JSON.parse(d);
-    const k=localStorage.getItem('xcabin_key');    if(k) document.getElementById('s-apikey').value=k;
     const l=localStorage.getItem('xcabin_lang');
     if(l&&['fr','en','es'].includes(l)){
       S.lang=l;
@@ -2304,8 +2072,6 @@ function loadData() {
   ];
   persist();
 }
-
-function saveApiKey(v) { try{localStorage.setItem('xcabin_key',v);}catch(e){} }
 
 // ═══════════════════════════════════════
 //  TOAST
